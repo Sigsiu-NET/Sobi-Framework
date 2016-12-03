@@ -22,6 +22,7 @@ defined( 'SOBI' ) || exit( 'Restricted access' );
 
 use Sobi\C;
 use Sobi\Framework;
+use Sobi\Error\Exception;
 
 abstract class FileSystem
 {
@@ -38,6 +39,7 @@ abstract class FileSystem
 	/**
 	 *     *
 	 * @param string $file
+	 * @param bool $safe
 	 * @return bool
 	 */
 	public static function Clean( $file, $safe = false )
@@ -117,7 +119,7 @@ abstract class FileSystem
 	/**
 	 *     *
 	 * @param string $file
-	 * @throws SPException
+	 * @throws Exception
 	 * @return bool
 	 */
 	public static function Delete( $file )
@@ -125,7 +127,7 @@ abstract class FileSystem
 		$file = self::FixPath( $file );
 		if ( is_dir( $file ) ) {
 			if ( $file == C::ROOT || dirname( $file ) == C::ROOT ) {
-				throw new SPException( Framework::Txt( 'Fatal error. Trying to delete not allowed path "%s"', $file ) );
+				throw new Exception( Framework::Txt( 'Fatal error. Trying to delete not allowed path "%s"', $file ) );
 			}
 			return Jfolder::delete( $file );
 		}
@@ -164,7 +166,7 @@ abstract class FileSystem
 	 * @param string $file
 	 * @param string $buffer
 	 * @param bool $append
-	 * @throws SPException
+	 * @throws Exception
 	 * @return bool
 	 */
 	public static function Write( $file, &$buffer, $append = false )
@@ -177,7 +179,7 @@ abstract class FileSystem
 		if ( $return === false ) {
 			/**
 			 * @todo how to translate from here */
-			throw new Exception( \SPLang::e( 'CANNOT_WRITE_TO_FILE_AT', $file ) );
+			throw new Exception( Framework::Txt( 'CANNOT_WRITE_TO_FILE_AT', $file ) );
 		}
 		else {
 			return $return;
@@ -223,7 +225,7 @@ abstract class FileSystem
 	{
 		$path = self::Clean( $path );
 		if ( !( JFolder::create( $path, $mode ) ) ) {
-			throw new Exception( \SPLang::e( 'CANNOT_CREATE_DIR', str_replace( C::ROOT, null, $path ) ) );
+			throw new Exception( Framework::Txt( 'CANNOT_CREATE_DIR', str_replace( C::ROOT, null, $path ) ) );
 		}
 		else {
 			return true;

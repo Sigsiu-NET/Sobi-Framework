@@ -49,7 +49,7 @@ class Autoloader
 
 
 	/**
-	 * @return $this
+	 * @return Autoloader
 	 */
 	public function & unregister()
 	{

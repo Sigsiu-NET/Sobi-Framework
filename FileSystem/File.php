@@ -20,8 +20,10 @@ namespace Sobi\FileSystem;
 
 defined( 'SOBI' ) || exit( 'Restricted access' );
 
+use Sobi\C;
 use Sobi\FileSystem\FileSystem;
 use Sobi\Error\Exception;
+use Sobi\Framework;
 
 class File
 {
@@ -129,7 +131,7 @@ class File
 	 */
 	public function upload( $name, $destination )
 	{
-		$destination = Sobi::FixPath( $destination );
+		$destination = FileSystem::Clean( $destination );
 
 
 		if ( FileSystem::Upload( $name, $destination ) ) {
@@ -144,7 +146,7 @@ class File
 				return $this->_filename;
 			}
 			else {
-				throw new Exception( SPLang::e( 'CANNOT_UPLOAD_FILE_TO', str_replace( SOBI_ROOT, null, $destination ) ) );
+				throw new Exception( Framework::Txt( 'CANNOT_UPLOAD_FILE_TO', str_replace( C::ROOT, null, $destination ) ) );
 			}
 		}
 	}
@@ -161,7 +163,7 @@ class File
 	/**
 	 * Moves file to new location
 	 * @param string $target - destination path
-	 * @return bool
+	 * @return File
 	 */
 	public function move( $target )
 	{
@@ -189,7 +191,7 @@ class File
 	/**
 	 * Set file content
 	 * @param $content - string
-	 * @return SPFile
+	 * @return File
 	 */
 	public function content( $content )
 	{

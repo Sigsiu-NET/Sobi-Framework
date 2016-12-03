@@ -142,7 +142,7 @@ class MySQLi
 	 * Sets the SQL query string for later execution.
 	 *
 	 * @param string $sql
-	 * @return $this
+	 * @return MySQLi
 	 */
 	public function setQuery( $sql )
 	{
@@ -869,6 +869,7 @@ class MySQLi
 			}
 			return $r;
 		}
+		return false;
 	}
 
 	/**
