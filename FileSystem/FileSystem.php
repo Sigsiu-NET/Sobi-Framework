@@ -21,6 +21,7 @@ namespace Sobi\FileSystem;
 defined( 'SOBI' ) || exit( 'Restricted access' );
 
 use Sobi\C;
+use Sobi\Framework;
 
 abstract class FileSystem
 {
@@ -101,15 +102,15 @@ abstract class FileSystem
 			foreach ( $path as $dir ) {
 				$part .= "/{$dir}";
 				if ( $dir && !( file_exists( $part ) ) ) {
-					self::mkdir( $part );
+					self::Mkdir( $part );
 				}
 			}
 		}
 		if ( !( is_dir( $source ) ) ) {
-			return Jfile::copy( self::clean( $source ), self::clean( $destination ) );
+			return Jfile::copy( self::Clean( $source ), self::Clean( $destination ) );
 		}
 		else {
-			return Jfolder::copy( self::clean( $source ), self::clean( $destination ) );
+			return Jfolder::copy( self::Clean( $source ), self::Clean( $destination ) );
 		}
 	}
 
@@ -121,10 +122,10 @@ abstract class FileSystem
 	 */
 	public static function Delete( $file )
 	{
-		$file = self::fixPath( $file );
+		$file = self::FixPath( $file );
 		if ( is_dir( $file ) ) {
 			if ( $file == C::ROOT || dirname( $file ) == C::ROOT ) {
-				throw new SPException( SPLang::e( 'Fatal error. Trying to delete not allowed path "%s"', $file ) );
+				throw new SPException( Framework::Txt( 'Fatal error. Trying to delete not allowed path "%s"', $file ) );
 			}
 			return Jfolder::delete( $file );
 		}
