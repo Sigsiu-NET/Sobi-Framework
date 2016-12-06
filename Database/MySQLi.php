@@ -864,7 +864,7 @@ class MySQLi
 			$attr = get_object_vars( $r );
 			foreach ( $attr as $property => $value ) {
 				if ( is_string( $value ) && strstr( $value, '"' ) ) {
-					$r->$property = class_exists( 'SPLang' ) ? SPLang::clean( $value ) : $value;
+					$r->$property = StringUtils::Clean( $value );
 				}
 			}
 			return $r;
