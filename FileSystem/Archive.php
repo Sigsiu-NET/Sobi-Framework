@@ -34,7 +34,7 @@ class Archive extends File
 		$ext = FileSystem::GetExt( $this->_filename );
 		switch ( $ext ) {
 			case 'zip':
-				$zip = new ZipArchive();
+				$zip = new \ZipArchive();
 				if ( $zip->open( $this->_filename ) === true ) {
 					try {
 						$zip->extractTo( $to );
