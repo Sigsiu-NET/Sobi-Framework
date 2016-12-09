@@ -49,7 +49,7 @@ abstract class FileSystem
 		$file = str_replace( '__BCKSL__', '\\', preg_replace( '|([^:])(\\\\)+([^\\\])|', "$1__BCKSL__$3", $file ) );
 		$file = str_replace( '\\', '/', $file );
 		if ( $safe ) {
-			$file = Jfile::makeSafe( $file );
+			$file = \Jfile::makeSafe( $file );
 		}
 		if ( !( strstr( $file, ':' ) ) ) {
 			while ( strstr( $file, '//' ) ) {
@@ -109,10 +109,10 @@ abstract class FileSystem
 			}
 		}
 		if ( !( is_dir( $source ) ) ) {
-			return Jfile::copy( self::Clean( $source ), self::Clean( $destination ) );
+			return \Jfile::copy( self::Clean( $source ), self::Clean( $destination ) );
 		}
 		else {
-			return Jfolder::copy( self::Clean( $source ), self::Clean( $destination ) );
+			return \Jfolder::copy( self::Clean( $source ), self::Clean( $destination ) );
 		}
 	}
 
@@ -129,10 +129,10 @@ abstract class FileSystem
 			if ( $file == C::ROOT || dirname( $file ) == C::ROOT ) {
 				throw new Exception( Framework::Txt( 'Fatal error. Trying to delete not allowed path "%s"', $file ) );
 			}
-			return Jfolder::delete( $file );
+			return \Jfolder::delete( $file );
 		}
 		else {
-			return Jfile::delete( $file );
+			return \Jfile::delete( $file );
 		}
 	}
 
@@ -144,7 +144,7 @@ abstract class FileSystem
 	 */
 	public static function Move( $source, $destination )
 	{
-		return Jfile::move( $source, $destination );
+		return \Jfile::move( $source, $destination );
 	}
 
 	/**
@@ -175,7 +175,7 @@ abstract class FileSystem
 			$content = self::Read( $file );
 			$buffer = $content . $buffer;
 		}
-		$return = Jfile::write( $file, $buffer );
+		$return = \Jfile::write( $file, $buffer );
 		if ( $return === false ) {
 			/**
 			 * @todo how to translate from here */
@@ -202,7 +202,7 @@ abstract class FileSystem
 		if ( strstr( $name, str_replace( '\\', '/', SOBI_PATH ) ) ) {
 			return self::Move( $name, $destination );
 		}
-		return Jfile::upload( $name, $destination, false, true );
+		return \Jfile::upload( $name, $destination, false, true );
 	}
 
 	/**
@@ -212,7 +212,7 @@ abstract class FileSystem
 	 */
 	public static function Chmod( $path, $hex )
 	{
-		return Jfile::chmod( $path, $hex );
+		return \Jfile::chmod( $path, $hex );
 	}
 
 	/**
@@ -249,7 +249,7 @@ abstract class FileSystem
 	 */
 	public static function Readable( $path )
 	{
-		return Jfile::isReadable( $path );
+		return \Jfile::isReadable( $path );
 	}
 
 	/**
@@ -259,7 +259,7 @@ abstract class FileSystem
 	 */
 	public static function Writable( $path )
 	{
-		return Jfile::isWritable( $path );
+		return \Jfile::isWritable( $path );
 	}
 
 	/**
