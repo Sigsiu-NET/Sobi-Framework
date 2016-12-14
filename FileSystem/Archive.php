@@ -42,7 +42,7 @@ class Archive extends File
 						$r = true;
 					} catch ( Exception $x ) {
 						$t = FileSystem::Clean( C::ROOT . '/tmp/' . md5( microtime() ) );
-						SPFs::mkdir( $t, 0777 );
+						FileSystem::Mkdir( $t, 0777 );
 						$dir = new Directory( $t );
 						if ( $zip->extractTo( $t ) ) {
 							$zip->close();
