@@ -224,7 +224,7 @@ abstract class FileSystem
 	public static function Mkdir( $path, $mode = 0755 )
 	{
 		$path = self::Clean( $path );
-		if ( !( JFolder::create( $path, $mode ) ) ) {
+		if ( !( \JFolder::create( $path, $mode ) ) ) {
 			throw new Exception( Framework::Txt( 'CANNOT_CREATE_DIR', str_replace( C::ROOT, null, $path ) ) );
 		}
 		else {
@@ -239,7 +239,7 @@ abstract class FileSystem
 	 */
 	public static function Rmdir( $path )
 	{
-		return JFolder::delete( $path );
+		return \JFolder::delete( $path );
 	}
 
 	/**
