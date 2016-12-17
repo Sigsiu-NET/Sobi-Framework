@@ -24,6 +24,8 @@ use Sobi\Error\Exception;
 
 class Autoloader
 {
+	/** @var array  */
+	protected $classes = [];
 
 	/**
 	 * @return Autoloader
@@ -49,6 +51,29 @@ class Autoloader
 
 
 	/**
+	 * @param string $class
+	 * @param string $path
+	 * @param bool $override
+	 * @return bool
+	 * @throws Exception
+	 */
+	public function registerClass( string $class, string $path, bool $override = false )
+	{
+		if ( !( isset( $this->classes[ $class ] ) ) || $override ) {
+			if ( file_exists( $path ) && is_readable( $path ) ) {
+				$this->classes[ $class ] = $path;
+				return true;
+			}
+			else {
+				throw new Exception( "Class definition of {$class} doesn't exists" );
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	/**
 	 * @return Autoloader
 	 */
 	public function & unregister()
@@ -61,18 +86,23 @@ class Autoloader
 	 * @param $class
 	 * @throws Exception
 	 */
-	protected function load( $class )
+	protected function load( string $class )
 	{
 		$path = explode( '\\', $class );
 		if ( $path[ 0 ] == 'Sobi' ) {
 			unset( $path[ 0 ] );
 			$path = implode( '/', $path );
 			if ( file_exists( dirname( __DIR__ . '../' ) . '/' . $path . '.php' ) ) {
+				/** @noinspection PhpIncludeInspection */
 				include_once dirname( __DIR__ . '../' ) . '/' . $path . '.php';
 			}
 			else {
 				throw new Exception( "Can't find class {$class} definition" );
 			}
+		}
+		elseif ( isset( $this->classes[ $class ] ) ) {
+			/** @noinspection PhpIncludeInspection */
+			include_once $this->classes[ $class ];
 		}
 	}
 }

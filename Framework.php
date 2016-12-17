@@ -51,7 +51,7 @@ abstract class Framework
 	 */
 	public static function Txt()
 	{
-		if ( is_array( self::translator ) && count( self::$translator ) == 2 ) {
+		if ( is_array( self::$translator ) && count( self::$translator ) == 2 ) {
 			$args = func_get_args();
 			return call_user_func_array( self::$translator, $args );
 		}

@@ -146,6 +146,7 @@ class CURL
 			'readfunction' => CURLOPT_READFUNCTION,
 			'writefunction' => CURLOPT_WRITEFUNCTION,
 	);
+	/** @noinspection PhpInconsistentReturnPointsInspection */
 
 	/**
 	 * Initialize a cURL session
@@ -250,6 +251,9 @@ class CURL
 	{
 		if ( is_resource( $this->resource ) ) {
 			return @curl_close( $this->resource );
+		}
+		else {
+			return false;
 		}
 	}
 

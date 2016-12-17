@@ -87,7 +87,7 @@ class Directory extends File
 
 	/**
 	 * Remove all files in directory
-	 * @return bool
+	 * @return void
 	 */
 	public function deleteFiles()
 	{
@@ -106,13 +106,13 @@ class Directory extends File
 	 * @param $recLevel
 	 * @param $results
 	 * @param $level
-	 * @return array
+	 * @return void
 	 */
-	private function searchRecursive( $dir, $string, $exact, $recLevel, &$results, $level = 0 )
+	private function searchRecursive( DirectoryIterator $dir, $string, $exact, $recLevel, &$results, $level = 0 )
 	{
 		$level++;
 		if ( $level > $recLevel ) {
-			return true;
+			return;
 		}
 		$r = $dir->searchFile( $string, $exact );
 		$results = array_merge( $results, $r );

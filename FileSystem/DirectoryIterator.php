@@ -30,6 +30,7 @@ class DirectoryIterator extends \ArrayObject
 	 * @var string
 	 */
 	private $_dir = null;
+	/** @noinspection PhpInconsistentReturnPointsInspection */
 
 	/**
 	 * @param string $dir - path

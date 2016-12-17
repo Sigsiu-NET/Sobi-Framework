@@ -94,6 +94,7 @@ abstract class FileSystem
 		$part = C::ROOT;
 		$i = count( $path );
 		/** clean the path */
+		/** @noinspection PhpExpressionResultUnusedInspection */
 		for ( $i; $i != 0; $i-- ) {
 			if( isset( $path[ $i ] ) && !( $path[ $i ] ) ) {
 				unset( $path[ $i ] );

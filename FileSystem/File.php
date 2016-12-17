@@ -133,7 +133,6 @@ class File
 	{
 		$destination = FileSystem::Clean( $destination );
 
-
 		if ( FileSystem::Upload( $name, $destination ) ) {
 			$this->_filename = $destination;
 			return $this->_filename;
@@ -141,7 +140,7 @@ class File
 		else {
 			// Sun, Jan 18, 2015 20:41:09
 			// stupid windows exception. I am not going to waste my time trying to find why the hell it doesn't work as it should
-			if ( FileSystem::Upload( Sobi::FixPath( $name ), $destination ) ) {
+			if ( FileSystem::Upload( FileSystem::Clean( $name ), $destination ) ) {
 				$this->_filename = $destination;
 				return $this->_filename;
 			}
@@ -169,7 +168,7 @@ class File
 	{
 		$f = explode( '/', $target );
 		$path = str_replace( $f[ count( $f ) - 1 ], null, $target );
-		if ( !( SPFs::exists( $path ) ) ) {
+		if ( !( FileSystem::Exists( $path ) ) ) {
 			FileSystem::Mkdir( $path );
 		}
 		if ( FileSystem::Move( $this->_filename, $target ) ) {

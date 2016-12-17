@@ -20,6 +20,7 @@ namespace Sobi\FileSystem;
 
 use Sobi\Framework;
 use Sobi\FileSystem\FileSystem;
+use Sobi\Error\Exception;
 
 class Image extends File
 {
@@ -94,7 +95,7 @@ class Image extends File
 	 * @param $width
 	 * @param $height
 	 * @param bool $always - even if smaller as given values
-	 * @throws SPException
+	 * @throws Exception
 	 * @return bool
 	 */
 	public function resample( $width, $height, $always = true )

@@ -144,11 +144,12 @@ class MySQLi
 	 * @param string $sql
 	 * @return MySQLi
 	 */
-	public function setQuery( $sql )
+	public function & setQuery( string $sql )
 	{
 		$sql = str_replace( 'spdb', $this->prefix . 'sobipro', $sql );
 		$sql = str_replace( 'NOW()', '\'' . gmdate( 'Y-m-d H:i:s' ) . '\'', $sql );
-		return $this->db->setQuery( $sql );
+		$this->db->setQuery( $sql );
+		return $this;
 	}
 
 	/* (non-PHPdoc)
@@ -319,7 +320,7 @@ class MySQLi
 	 * Creates where condition from a given array
 	 *
 	 * @param array $where - array with values. array( 'id' => 5, 'published' => 1 ) OR array( 'id' => array( 5, 3, 4 ), 'published' => 1 )
-	 * @param string $andor - joind conditions through AND or OR
+	 * @param string $andor - join conditions through AND or OR
 	 * @return string
 	 */
 	public function where( $where, $andor = 'AND' )
@@ -628,7 +629,7 @@ class MySQLi
 	 * @param string $table - table name
 	 * @param array $values - two-dimensional array with table row name => value
 	 * @param bool $ignore - adds "IGNORE" after "INSERT" command
-	 * @param bool $normalize - if the $values is a two-dimm, array and it's not complete - fit to the columns
+	 * @param bool $normalize - if the $values is a two-dimensional, array and it's not complete - fit to the columns
 	 * @throws Exception
 	 * @return \Sobi\Database\MySQLi
 	 */
@@ -860,16 +861,13 @@ class MySQLi
 		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-		if ( $r && is_object( $r ) ) {
-			$attr = get_object_vars( $r );
-			foreach ( $attr as $property => $value ) {
-				if ( is_string( $value ) && strstr( $value, '"' ) ) {
-					$r->$property = StringUtils::Clean( $value );
-				}
+		$attr = get_object_vars( $r );
+		foreach ( $attr as $property => $value ) {
+			if ( is_string( $value ) && strstr( $value, '"' ) ) {
+				$r->$property = StringUtils::Clean( $value );
 			}
-			return $r;
 		}
-		return false;
+		return $r;
 	}
 
 	/**
@@ -1004,7 +1002,7 @@ class MySQLi
 	}
 
 	/**
-	 * ommits the current transaction, making its changes permanent
+	 * commits the current transaction, making its changes permanent
 	 *
 	 * @return bool
 	 */
@@ -1023,7 +1021,7 @@ class MySQLi
 	}
 
 	/**
-	 * Creates yntax for joins two tables
+	 * Creates syntax for joins two tables
 	 *
 	 * @param array $params - two cells array with table name <var>table</var>, alias name <var>as</var> and common key <var>key</var>
 	 * @param string $through - join direction (left/right)
