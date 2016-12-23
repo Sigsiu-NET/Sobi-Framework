@@ -861,10 +861,12 @@ class MySQLi
 		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-		$attr = get_object_vars( $r );
-		foreach ( $attr as $property => $value ) {
-			if ( is_string( $value ) && strstr( $value, '"' ) ) {
-				$r->$property = StringUtils::Clean( $value );
+		if ( $r && is_object( $r ) ) {
+			$attr = get_object_vars( $r );
+			foreach ( $attr as $property => $value ) {
+				if ( is_string( $value ) && strstr( $value, '"' ) ) {
+					$r->$property = StringUtils::Clean( $value );
+				}
 			}
 		}
 		return $r;
