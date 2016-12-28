@@ -69,14 +69,12 @@ abstract class Input
 
 	/**
 	 * @param string $name
-	 * @param bool|null $default
+	 * @param bool $default
 	 * @param string $request
-	 *
 	 * @return bool
-	 *
 	 * @since version
 	 */
-	public static function Bool( string $name, $default = 0, string $request = 'request' )
+	public static function Bool( string $name, $default = false, string $request = 'request' )
 	{
 		return (bool)Request::Instance()->{$request}->getBool( $name, $default );
 	}
@@ -92,7 +90,7 @@ abstract class Input
 	 */
 	public static function Cmd( string $name, string $default = null, string $request = 'request' )
 	{
-		return preg_replace( '/[^A-Za-z0-9\/+=]/', null, Request::Instance()->{$request}->getString( $name, $default ) );
+		return preg_replace( '/[^A-Za-z0-9\/+=\.]/', null, Request::Instance()->{$request}->getString( $name, $default ) );
 	}
 
 	/**
@@ -198,7 +196,7 @@ abstract class Input
 	 */
 	public static function Task( $request = 'request' )
 	{
-		return self::Cmd( 'task', $request );
+		return self::Cmd( 'task', null, $request );
 	}
 
 	/**
@@ -208,11 +206,11 @@ abstract class Input
 	 * @throws Exception
 	 * @since version
 	 */
-	public static function __callStatic( string $name, $arguments = [ 0 => null, 1 => 'request' ] )
+	public static function __callStatic( string $name, $arguments = [] )
 	{
 		if ( strstr( $name, 'id' ) ) {
 			if ( !( count( $arguments ) ) ) {
-				$arguments = [ 0 => null, 1 => 'request' ];
+				$arguments = [ 0 => 0, 1 => 'request' ];
 			}
 			return self::Int( strtolower( $name ), $arguments[ 0 ], $arguments[ 1 ] );
 		}
@@ -230,7 +228,7 @@ abstract class Input
 	 * @param string $method request method
 	 * @return int
 	 */
-	static public function Timestamp( string $name, double $default = 0.0, string $method = 'request' )
+	static public function Timestamp( string $name, float $default = 0.0, string $method = 'request' )
 	{
 		$val = self::Double( $name, $default, $method );
 		// JavaScript conversion
