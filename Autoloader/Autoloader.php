@@ -24,7 +24,7 @@ use Sobi\Error\Exception;
 
 class Autoloader
 {
-	/** @var array  */
+	/** @var array */
 	protected $classes = [];
 
 	/**
@@ -70,6 +70,17 @@ class Autoloader
 		}
 		else {
 			return false;
+		}
+	}
+
+	/**
+	 * @param array $classes
+	 *
+	 */
+	public function registerClasses( array $classes )
+	{
+		foreach ( $classes as $class => $path ) {
+			$this->registerClass( $class, $path );
 		}
 	}
 
