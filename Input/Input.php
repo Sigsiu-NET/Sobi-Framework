@@ -33,21 +33,21 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public static function Int( string $name, int $default = null, string $request = 'request' )
+	public static function Int( string $name, int $default = 0, string $request = 'request' )
 	{
 		return (int)Request::Instance()->{$request}->getInt( $name, $default );
 	}
 
 	/**
 	 * @param string $name
-	 * @param array|null $default
+	 * @param array $default
 	 * @param string $request
 	 *
 	 * @return array
 	 *
 	 * @since version
 	 */
-	public static function Arr( string $name, array $default = null, string $request = 'request' )
+	public static function Arr( string $name, array $default = [], string $request = 'request' )
 	{
 		/** No need for cleaning - Joomla! is doing it already */
 		return (array)Request::Instance()->{$request}->getArray( $name, $default );
@@ -76,7 +76,7 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public static function Bool( string $name, bool $default = null, string $request = 'request' )
+	public static function Bool( string $name, $default = 0, string $request = 'request' )
 	{
 		return (bool)Request::Instance()->{$request}->getBool( $name, $default );
 	}
@@ -97,28 +97,26 @@ abstract class Input
 
 	/**
 	 * @param string $name
-	 * @param bool|null $default
+	 * @param float $default
 	 * @param string $request
-	 *
 	 * @return float
-	 *
 	 * @since version
 	 */
-	public static function Double( string $name, bool $default = null, string $request = 'request' )
+	public static function Double( string $name, float $default = 0.0, string $request = 'request' )
 	{
 		return (float)Request::Instance()->{$request}->getFloat( $name, $default );
 	}
 
 	/**
 	 * @param string $name
-	 * @param bool|null $default
+	 * @param float $default
 	 * @param string $request
 	 *
 	 * @return float
 	 *
 	 * @since version
 	 */
-	public static function Float( string $name, bool $default = null, string $request = 'request' )
+	public static function Float( string $name, float $default = 0.0, string $request = 'request' )
 	{
 		return (float)Request::Instance()->{$request}->getFloat( $name, $default );
 	}
@@ -232,7 +230,7 @@ abstract class Input
 	 * @param string $method request method
 	 * @return int
 	 */
-	static public function Timestamp( string $name, double $default = null, string $method = 'request' )
+	static public function Timestamp( string $name, double $default = 0.0, string $method = 'request' )
 	{
 		$val = self::Double( $name, $default, $method );
 		// JavaScript conversion

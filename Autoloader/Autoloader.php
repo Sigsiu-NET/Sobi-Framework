@@ -57,7 +57,7 @@ class Autoloader
 	 * @return bool
 	 * @throws Exception
 	 */
-	public function registerClass( string $class, string $path, bool $override = false )
+	public function registerClass( string $class, string $path, $override = false )
 	{
 		if ( !( isset( $this->classes[ $class ] ) ) || $override ) {
 			if ( file_exists( $path ) && is_readable( $path ) ) {
