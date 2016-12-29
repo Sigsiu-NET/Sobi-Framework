@@ -144,7 +144,7 @@ class MySQLi
 	 * @param string $sql
 	 * @return MySQLi
 	 */
-	public function & setQuery( string $sql )
+	public function & setQuery( $sql )
 	{
 		$sql = str_replace( 'spdb', $this->prefix . 'sobipro', $sql );
 		$sql = str_replace( 'NOW()', '\'' . gmdate( 'Y-m-d H:i:s' ) . '\'', $sql );
