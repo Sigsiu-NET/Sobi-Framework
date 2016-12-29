@@ -14,6 +14,9 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * @created Thu, Dec 1, 2016 12:03:14
+ *
+ *
+ *
  */
 
 namespace Sobi\Input;
@@ -22,6 +25,10 @@ use Sobi\Error\Exception;
 
 defined( 'SOBI' ) || exit( 'Restricted access' );
 
+/**
+ * @method      integer  Sid()       public static Sid( $request = 'request', $default = 0 )
+ * @method      integer  Cid()       public static Cid( $request = 'request', $default = 0 )
+ */
 abstract class Input
 {
 	/**
@@ -33,7 +40,7 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public static function Int( string $name, string $request = 'request', int $default = 0 )
+	public static function Int( $name, $request = 'request', $default = 0 )
 	{
 		return (int)Request::Instance()->{$request}->getInt( $name, $default );
 	}
@@ -47,7 +54,7 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public static function Arr( string $name, string $request = 'request', array $default = [] )
+	public static function Arr( $name, $request = 'request', array $default = [] )
 	{
 		/** No need for cleaning - Joomla! is doing it already */
 		$arr = Request::Instance()->{$request}->get( $name, $default, 'array' );
@@ -65,7 +72,7 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public static function Base64( string $name, string $request = 'request', string $default = null )
+	public static function Base64( $name, $request = 'request', $default = null )
 	{
 		return preg_replace( '/[^A-Za-z0-9\/+=]/', null, Request::Instance()->{$request}->getString( $name, $default ) );
 	}
@@ -77,7 +84,7 @@ abstract class Input
 	 * @return bool
 	 * @since version
 	 */
-	public static function Bool( string $name, string $request = 'request', $default = false )
+	public static function Bool( $name, $request = 'request', $default = false )
 	{
 		return (bool)Request::Instance()->{$request}->getBool( $name, $default );
 	}
@@ -91,7 +98,7 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public static function Cmd( string $name, string $request = 'request', string $default = null )
+	public static function Cmd( $name, $request = 'request', $default = null )
 	{
 		return preg_replace( '/[^A-Za-z0-9\/+=\.]/', null, Request::Instance()->{$request}->getString( $name, $default ) );
 	}
@@ -103,7 +110,7 @@ abstract class Input
 	 * @return float
 	 * @since version
 	 */
-	public static function Double( string $name, string $request = 'request', float $default = 0.0 )
+	public static function Double( $name, $request = 'request', $default = 0.0 )
 	{
 		return (float)Request::Instance()->{$request}->getFloat( $name, $default );
 	}
@@ -117,7 +124,7 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public static function Float( string $name, string $request = 'request', float $default = 0.0 )
+	public static function Float( $name, $request = 'request', $default = 0.0 )
 	{
 		return (float)Request::Instance()->{$request}->getFloat( $name, $default );
 	}
@@ -131,7 +138,7 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public static function Html( string $name, string $request = 'request', string $default = null )
+	public static function Html( $name, $request = 'request', $default = null )
 	{
 		return filter_var( Request::Instance()->{$request}->getHtml( $name, $default ), FILTER_SANITIZE_MAGIC_QUOTES );
 	}
@@ -145,7 +152,7 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public static function String( string $name, string $request = 'request', string $default = null )
+	public static function String( $name, $request = 'request', $default = null )
 	{
 		$value = Request::Instance()->{$request}->getString( $name, $default );
 		return filter_var( $value, FILTER_SANITIZE_MAGIC_QUOTES );
@@ -160,7 +167,7 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public static function Ip4( string $name, string $request = 'request', string $default = null )
+	public static function Ip4( $name, $request = 'request', $default = null )
 	{
 		return preg_replace( '/[^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}]/', null, Request::Instance()->{$request}->getString( $name, $default ) );
 	}
@@ -185,7 +192,7 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public static function Raw( string $name, string $request = 'request', mixed $default = null )
+	public static function Raw( $name, $request = 'request', $default = null )
 	{
 		return Request::Instance()->{$request}->get( $name, $default );
 	}
@@ -209,7 +216,7 @@ abstract class Input
 	 * @throws Exception
 	 * @since version
 	 */
-	public static function __callStatic( string $name, $arguments = [] )
+	public static function __callStatic( $name, $arguments = [] )
 	{
 		if ( strstr( $name, 'id' ) ) {
 			if ( !( count( $arguments ) ) ) {
@@ -231,7 +238,7 @@ abstract class Input
 	 * @param string $method request method
 	 * @return int
 	 */
-	static public function Timestamp( string $name, string $method = 'request', float $default = 0.0 )
+	static public function Timestamp( $name, $method = 'request', $default = 0.0 )
 	{
 		$val = self::Double( $name, $default, $method );
 		// JavaScript conversion
@@ -248,7 +255,7 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public static function Word( string $name, string $request = 'request', string $default = null )
+	public static function Word( $name, $request = 'request', $default = null )
 	{
 		return preg_replace( '[^a-zA-Z0-9\p{L}\_\-\s]/u', null, Request::Instance()->{$request}->getString( $name, $default ) );
 	}

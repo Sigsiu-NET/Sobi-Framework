@@ -57,7 +57,7 @@ class Autoloader
 	 * @return bool
 	 * @throws Exception
 	 */
-	public function registerClass( string $class, string $path, $override = false )
+	public function registerClass( $class, $path, $override = false )
 	{
 		if ( !( isset( $this->classes[ $class ] ) ) || $override ) {
 			if ( file_exists( $path ) && is_readable( $path ) ) {
@@ -97,7 +97,7 @@ class Autoloader
 	 * @param $class
 	 * @throws Exception
 	 */
-	protected function load( string $class )
+	protected function load( $class )
 	{
 		$path = explode( '\\', $class );
 		if ( $path[ 0 ] == 'Sobi' ) {
