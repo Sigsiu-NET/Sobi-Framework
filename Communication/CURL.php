@@ -26,7 +26,7 @@ use Sobi\Framework;
 class CURL
 {
 	private $resource = null;
-	static $infoCodes = array(
+	static $infoCodes = [
 			'effective_url' => CURLINFO_EFFECTIVE_URL,
 			'http_code' => CURLINFO_HTTP_CODE,
 			'response_code' => CURLINFO_HTTP_CODE,
@@ -48,8 +48,8 @@ class CURL
 			'content_length_download' => CURLINFO_CONTENT_LENGTH_DOWNLOAD,
 			'content_length_upload' => CURLINFO_CONTENT_LENGTH_UPLOAD,
 			'content_type' => CURLINFO_CONTENT_TYPE
-	);
-	static $optionsCodes = array(
+	];
+	static $optionsCodes = [
 			'autoreferer' => CURLOPT_AUTOREFERER,
 			'binarytransfer' => CURLOPT_BINARYTRANSFER,
 			'cookiesession' => CURLOPT_COOKIESESSION,
@@ -145,7 +145,7 @@ class CURL
 			'headerfunction' => CURLOPT_HEADERFUNCTION,
 			'readfunction' => CURLOPT_READFUNCTION,
 			'writefunction' => CURLOPT_WRITEFUNCTION,
-	);
+	];
 	/** @noinspection PhpInconsistentReturnPointsInspection */
 
 	/**
@@ -306,10 +306,10 @@ class CURL
 			$url = $url[ 0 ];
 		}
 		if ( !( $this->validateHttp( 'https://' . $url ) ) ) {
-			return array( 'err' => 500, 'msg' => Framework::Txt( 'INVALID_URL', 'https://' . $url ) );
+			return [ 'err' => 500, 'msg' => Framework::Txt( 'INVALID_URL', 'https://' . $url ) ];
 		}
 		$this->setOptions(
-				array(
+				[
 						'url' => 'https://' . $url,
 						'connecttimeout' => 10,
 						'header' => true,
@@ -317,20 +317,20 @@ class CURL
 						'ssl_verifypeer' => false,
 						'ssl_verifyhost' => 2,
 						'nobody' => true,
-				)
+				]
 		);
 		if ( !( $this->validCode( $this->exec() ) ) ) {
 			$err = $this->info();
-			return array( 'err' => $err[ 'http_code' ], 'msg' => Framework::Txt( 'NO_CONNECT', 'https://' . $url ) );
+			return [ 'err' => $err[ 'http_code' ], 'msg' => Framework::Txt( 'NO_CONNECT', 'https://' . $url ) ];
 		}
-		$res = stream_context_create( array( 'ssl' => array( 'capture_peer_cert' => true ) ) );
+		$res = stream_context_create( [ 'ssl' => [ 'capture_peer_cert' => true ] ] );
 		$client = stream_socket_client( "ssl://{$url}:443", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $res );
 		$cont = stream_context_get_options( $client );
 		if ( !$errno ) {
 			return openssl_x509_parse( $cont[ 'ssl' ][ 'peer_certificate' ] );
 		}
 		else {
-			return array( 'err' => $errno, 'msg' => $errstr );
+			return [ 'err' => $errno, 'msg' => $errstr ];
 		}
 	}
 
@@ -341,7 +341,7 @@ class CURL
 
 	public function getCode( $response )
 	{
-		$matches = array();
+		$matches = [];
 		if ( preg_match( '/HTTP\/1\.\d+\s+(\d+)/', $response, $matches ) ) {
 			return ( int )$matches[ 1 ];
 		}
@@ -363,7 +363,7 @@ class CURL
 	 */
 	public function error( $message = true, $number = true )
 	{
-		$err = array();
+		$err = [];
 		if ( $number ) {
 			$err[] = curl_errno( $this->resource );
 		}

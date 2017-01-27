@@ -45,7 +45,7 @@ class Autoloader
 	 */
 	public function & register()
 	{
-		spl_autoload_register( array( $this, 'load' ), true );
+		spl_autoload_register( [ $this, 'load' ], true );
 		return $this;
 	}
 
@@ -89,7 +89,7 @@ class Autoloader
 	 */
 	public function & unregister()
 	{
-		spl_autoload_unregister( array( $this, 'load' ) );
+		spl_autoload_unregister( [ $this, 'load' ] );
 		return $this;
 	}
 

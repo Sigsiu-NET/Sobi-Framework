@@ -82,7 +82,7 @@ class File
 	 */
 	public function isDot()
 	{
-		return in_array( $this->getFileName(), array( '.', '..' ) );
+		return in_array( $this->getFileName(), [ '.', '..' ] );
 	}
 
 	/**

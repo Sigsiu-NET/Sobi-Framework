@@ -90,7 +90,7 @@ abstract class FileSystem
 	public static function Copy( $source, $destination )
 	{
 		$destination = self::Clean( str_replace( '\\', '/', $destination ) );
-		$path = explode( '/', str_replace( array( C::ROOT, str_replace( '\\', '/', C::ROOT ) ), null, $destination ) );
+		$path = explode( '/', str_replace( [ C::ROOT, str_replace( '\\', '/', C::ROOT ) ], null, $destination ) );
 		$part = C::ROOT;
 		$i = count( $path );
 		/** clean the path */

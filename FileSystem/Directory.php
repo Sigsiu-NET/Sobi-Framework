@@ -37,9 +37,9 @@ class Directory extends File
 	public function searchFile( $string, $exact = true, $recLevel = 1 )
 	{
 		$this->iterator();
-		$results = array();
+		$results = [];
 		if ( !( is_array( $string ) ) ) {
-			$string = array( $string );
+			$string = [ $string ];
 		}
 		foreach ( $string as $search ) {
 			$this->searchRecursive( $this->_dirIterator, $search, $exact, $recLevel, $results );
@@ -67,7 +67,7 @@ class Directory extends File
 	public function moveFiles( $target, $force = false )
 	{
 		$this->iterator();
-		$log = array();
+		$log = [];
 		foreach ( $this->_dirIterator as $child ) {
 			if ( !( $child->isDot() ) ) {
 				if ( ( !( FileSystem::Exists( FileSystem::Clean( $target . '/' . $child->getFileName() ) ) ) ) ) {

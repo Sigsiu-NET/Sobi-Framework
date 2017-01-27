@@ -64,7 +64,7 @@ class DirectoryIterator extends \ArrayObject
 	 */
 	public function searchFile( $string, $exact = true )
 	{
-		$results = array();
+		$results = [];
 		foreach ( $this as $item ) {
 			if ( $item->isDot() ) {
 				continue;

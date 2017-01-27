@@ -92,12 +92,12 @@ class MySQLi
 	public function __call( $method, $args )
 	{
 		if ( $this->db && method_exists( $this->db, $method ) ) {
-			$Args = array();
+			$Args = [];
 			// http://www.php.net/manual/en/function.call-user-func-array.php#91503
 			foreach ( $args as $k => &$arg ) {
 				$Args[ $k ] = &$arg;
 			}
-			return call_user_func_array( array( $this->db, $method ), $Args );
+			return call_user_func_array( [ $this->db, $method ], $Args );
 		}
 		else {
 			throw new Exception( Framework::Txt( 'CALL_TO_UNDEFINED_CLASS_METHOD', get_class( $this->_type ), $method ) );
@@ -159,7 +159,7 @@ class MySQLi
 	{
 		$sql = file_get_contents( $file );
 		$sql = explode( "\n", $sql );
-		$log = array();
+		$log = [];
 		if ( count( $sql ) ) {
 			foreach ( $sql as $query ) {
 				if ( strlen( $query ) ) {
@@ -226,7 +226,7 @@ class MySQLi
 			}
 			if ( strstr( $order, ',' ) ) {
 				$o = explode( ',', $order );
-				$order = array();
+				$order = [];
 				foreach ( $o as $p ) {
 					if ( strstr( $p, '.' ) ) {
 						$p = explode( '.', $p );
@@ -326,7 +326,7 @@ class MySQLi
 	public function where( $where, $andor = 'AND' )
 	{
 		if ( is_array( $where ) ) {
-			$w = array();
+			$w = [];
 			foreach ( $where as $col => $val ) {
 				$equal = '=';
 				$not = false;
@@ -363,16 +363,16 @@ class MySQLi
 					 * 	key BETWEEN 1 AND 10
 					 */
 				elseif ( is_array( $val ) && ( isset( $val[ 'from' ] ) || isset( $val[ 'to' ] ) ) ) {
-					if ( ( isset( $val[ 'from' ] ) && isset( $val[ 'to' ] ) ) && $val[ 'from' ] != SPC::NO_VALUE && $val[ 'to' ] != SPC::NO_VALUE ) {
+					if ( ( isset( $val[ 'from' ] ) && isset( $val[ 'to' ] ) ) && $val[ 'from' ] != C::NO_VALUE && $val[ 'to' ] != C::NO_VALUE ) {
 						$val[ 'to' ] = $this->escape( $val[ 'to' ] );
 						$val[ 'from' ] = $this->escape( $val[ 'from' ] );
 						$w[] = " ( {$col} * 1.0 BETWEEN {$val['from']} AND {$val['to']} ) ";
 					}
-					elseif ( $val[ 'from' ] != SPC::NO_VALUE && $val[ 'to' ] == SPC::NO_VALUE ) {
+					elseif ( $val[ 'from' ] != C::NO_VALUE && $val[ 'to' ] == C::NO_VALUE ) {
 						$val[ 'from' ] = $this->escape( $val[ 'from' ] );
 						$w[] = " ( {$col} * 1.0 > {$val['from']} ) ";
 					}
-					elseif ( $val[ 'from' ] == SPC::NO_VALUE && $val[ 'to' ] != SPC::NO_VALUE ) {
+					elseif ( $val[ 'from' ] == C::NO_VALUE && $val[ 'to' ] != C::NO_VALUE ) {
 						$val[ 'to' ] = $this->escape( $val[ 'to' ] );
 						$w[] = " ( {$col} * 1.0 < {$val['to']} ) ";
 					}
@@ -384,7 +384,7 @@ class MySQLi
 					 * 	key IN ( 1,2,3,4 )
 					 */
 				elseif ( is_array( $val ) ) {
-					$v = array();
+					$v = [];
 					foreach ( $val as $k ) {
 						if ( strlen( $k ) || $k == C::NO_VALUE ) {
 							$k = $k == C::NO_VALUE ? null : $k;
@@ -483,7 +483,7 @@ class MySQLi
 	 * @param string $charset
 	 * @return \Sobi\Database\MySQLi
 	 */
-	public function & createTable( $name, $fields, $keys = array(), $notExists = false, $engine = null, $charset = 'utf8' )
+	public function & createTable( $name, $fields, $keys = [], $notExists = false, $engine = null, $charset = 'utf8' )
 	{
 		$name = "#__sobipro_{$name}";
 		$query = $notExists ? "CREATE TABLE IF NOT EXISTS `{$name}` " : "CREATE TABLE `{$name}` ";
@@ -541,7 +541,7 @@ class MySQLi
 	  */
 	public function argsOr( $val )
 	{
-		$cond = array();
+		$cond = [];
 		foreach ( $val as $i => $k ) {
 			$equal = ' = ';
 			if ( strpos( $i, '<' ) ) {
@@ -569,7 +569,7 @@ class MySQLi
 	 */
 	public function update( $table, $set, $where, $limit = 0 )
 	{
-		$change = array();
+		$change = [];
 		$where = $this->where( $where );
 		foreach ( $set as $var => $state ) {
 			if ( is_array( $state ) || is_object( $state ) ) {
@@ -602,7 +602,7 @@ class MySQLi
 	 */
 	public function replace( $table, $values )
 	{
-		$v = array();
+		$v = [];
 		foreach ( $values as $var => $val ) {
 			if ( is_array( $val ) || is_object( $val ) ) {
 				$val = Serialiser::serialise( $val );
@@ -636,7 +636,7 @@ class MySQLi
 	public function & insert( $table, $values, $ignore = false, $normalize = false )
 	{
 		$ignore = $ignore ? 'IGNORE ' : null;
-		$v = array();
+		$v = [];
 		if ( $normalize ) {
 			$this->normalize( $table, $values );
 		}
@@ -668,7 +668,7 @@ class MySQLi
 	 */
 	public function normalize( $table, &$values )
 	{
-		$normalised = array();
+		$normalised = [];
 		$cols = $this->getColumns( $table );
 		/* sort the properties in the same order */
 		foreach ( $cols as $col ) {
@@ -690,11 +690,11 @@ class MySQLi
 	public function & insertArray( $table, $values, $update = false, $ignore = false )
 	{
 		$ignore = $ignore ? 'IGNORE ' : null;
-		$rows = array();
+		$rows = [];
 		foreach ( $values as $arr ) {
-			$v = array();
-			$vars = array();
-			$k = array();
+			$v = [];
+			$vars = [];
+			$k = [];
 			foreach ( $arr as $var => $val ) {
 				if ( is_array( $val ) || is_object( $val ) ) {
 					$val = Serialiser::serialise( $val );
@@ -733,9 +733,9 @@ class MySQLi
 	 */
 	public function & insertUpdate( $table, $values )
 	{
-		$v = array();
-		$c = array();
-		$k = array();
+		$v = [];
+		$c = [];
+		$k = [];
 		foreach ( $values as $var => $val ) {
 			if ( is_array( $val ) || is_object( $val ) ) {
 				$val = Serialiser::serialise( $val );
@@ -971,7 +971,7 @@ class MySQLi
 	 */
 	public function getColumns( $table )
 	{
-		static $cache = array();
+		static $cache = [];
 		if ( !( isset( $cache[ $table ] ) ) ) {
 			$this->setQuery( "SHOW COLUMNS FROM {$table}" );
 			try {
@@ -1034,7 +1034,7 @@ class MySQLi
 		$through = strtoupper( $through );
 		$join = null;
 		if ( count( $params ) > 2 ) {
-			$joins = array();
+			$joins = [];
 			$c = 0;
 			foreach ( $params as $table ) {
 				if ( isset( $table[ 'table' ] ) ) {
@@ -1084,7 +1084,7 @@ class MySQLi
 			$since = "AND ( {$since} < NOW() OR {$since} IN( '{$null}', '{$stamp}' ) ) ";
 		}
 		if ( $exception && is_array( $exception ) ) {
-			$ex = array();
+			$ex = [];
 			foreach ( $exception as $subject => $value ) {
 				$ex[] = "{$subject} = '{$value}'";
 			}

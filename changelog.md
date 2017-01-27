@@ -26,7 +26,17 @@ Legend:
 - (-) - Removed
 - (!) - Change
 
+
 1.0.0 ()
+-------------------
+
+	(#) SPC used in Framework - junk left after moving functionality to the Framework. (Issue #1766)
+	 
+	(!) Array syntax changed
+	
+	
+
+1.0.0 (21 January 2017)
 -------------------
 
 	(+) Initial release 
