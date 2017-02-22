@@ -63,6 +63,27 @@ abstract class Input
 		return isset( $_REQUEST[ $name ] ) && is_array( $_REQUEST[ $name ] ) ? $arr : $default;
 	}
 
+
+	/**
+	 * Search for indexes within the requested method
+	 *
+	 * @param string $search variable name
+	 * @param string $request request method
+	 * @return mixed
+	 */
+	static public function Search( $search, $request = 'request' )
+	{
+//		$r = Request::Instance()->{$request};
+//		if ( count( self::$request ) ) {
+//			foreach ( self::$request as $name => $value ) {
+//				if ( strstr( $name, $search ) ) {
+//					self::$val[ $name ] = $value;
+//				}
+//			}
+//		}
+//		return self::$val;
+	}
+
 	/**
 	 * @param string $name
 	 * @param string|null $default
@@ -167,7 +188,7 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public static function Ip4( $name, $request = 'request', $default = null )
+	public static function Ip4( $name, $request = 'server', $default = null )
 	{
 		return preg_replace( '/[^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}]/', null, Request::Instance()->{$request}->getString( $name, $default ) );
 	}
@@ -258,5 +279,18 @@ abstract class Input
 	public static function Word( $name, $request = 'request', $default = null )
 	{
 		return preg_replace( '[^a-zA-Z0-9\p{L}\_\-\s]/u', null, Request::Instance()->{$request}->getString( $name, $default ) );
+	}
+
+	/**
+	 * @param $name
+	 * @param $value
+	 * @param string $request
+	 *
+	 *
+	 * @since version
+	 */
+	public function Set( $name, $value, $request = 'request' )
+	{
+		Request::Instance()->{$request}->set( $name, $value );
 	}
 }
