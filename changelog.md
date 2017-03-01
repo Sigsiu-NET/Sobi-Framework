@@ -27,7 +27,7 @@ Legend:
 - (!) - Change
 
 
-1.0.1 ()
+1.0.1 (1 March 2017)
 -------------------
 
 	(#) SPC used in Framework - junk left after moving functionality to the Framework. (Issue #1766)
