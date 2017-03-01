@@ -289,7 +289,7 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public function Set( $name, $value, $request = 'request' )
+	public static function Set( $name, $value, $request = 'request' )
 	{
 		Request::Instance()->{$request}->set( $name, $value );
 	}
