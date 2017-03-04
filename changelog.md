@@ -27,6 +27,12 @@ Legend:
 - (!) - Change
 
 
+1.0.2 (4 March 2017)
+-------------------
+
+	(#) Wrong regex for Input::Cmd
+
+
 1.0.1 (1 March 2017)
 -------------------
 

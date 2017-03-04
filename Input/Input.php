@@ -121,7 +121,7 @@ abstract class Input
 	 */
 	public static function Cmd( $name, $request = 'request', $default = null )
 	{
-		return preg_replace( '/[^A-Za-z0-9\/+=\.]/', null, Request::Instance()->{$request}->getString( $name, $default ) );
+		return preg_replace( '/[^a-zA-Z0-9\p{L}\.\-\_\:]/u', null, Request::Instance()->{$request}->getString( $name, $default ) );
 	}
 
 	/**
