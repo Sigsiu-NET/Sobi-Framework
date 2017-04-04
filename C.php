@@ -40,5 +40,5 @@ abstract class C
 	const NO = 0;
 	const ROOT = JPATH_ROOT;
 	const DS = DIRECTORY_SEPARATOR;
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 }

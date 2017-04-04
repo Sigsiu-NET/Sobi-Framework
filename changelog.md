@@ -9,7 +9,7 @@ Name: Sigrid Suski & Radek Suski, Sigsiu.NET GmbH
 Email: sobi[at]sigsiu.net
 Url: https://www.Sigsiu.NET
 
-@copyright Copyright (C) 2006 - 2016 Sigsiu.NET GmbH (https://www.sigsiu.net). All rights reserved.
+@copyright Copyright (C) 2006 - 2017 Sigsiu.NET GmbH (https://www.sigsiu.net). All rights reserved.
 @license GNU/GPL Version 3
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License version 3
 as published by the Free Software Foundation, and under the additional terms according section 7 of GPL v3.
@@ -41,10 +41,9 @@ Legend:
 1.0.1 (1 March 2017)
 -------------------
 
-	(#) SPC used in Framework - junk left after moving functionality to the Framework. (Issue #1766)
-	 
 	(!) Array syntax changed
-	
+
+	(#) SPC used in Framework; junk left after moving functionality to the Framework (Issue #1766)
 	
 
 1.0.0 (21 January 2017)
