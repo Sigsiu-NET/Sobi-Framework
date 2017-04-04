@@ -13,16 +13,21 @@
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * @created Thu, Dec 1, 2016 12:03:26
+ * @created Tue, Mar 28, 2017 11:58:37
  */
-
-namespace Sobi\Input;
-
-use Sobi\Lib\Instance;
+namespace Sobi\Lib;
 
 defined( 'SOBI' ) || exit( 'Restricted access' );
 
-class Request extends \JInput
+
+trait Instance
 {
-	use Instance;
+	public static function & Instance()
+	{
+		static $i = null;
+		if ( !$i || !( $i instanceof self ) ) {
+			$i = new self();
+		}
+		return $i;
+	}
 }

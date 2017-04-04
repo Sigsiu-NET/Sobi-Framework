@@ -25,7 +25,11 @@ use Sobi\Error\Exception;
 
 abstract class Framework
 {
+	/** @var array  */
 	protected static $translator = [];
+	/** @var array  */
+	protected static $config;
+
 
 	/**
 	 * @param array $callback
@@ -58,5 +62,27 @@ abstract class Framework
 		else {
 			throw new Exception( 'Translator has not been set' );
 		}
+	}
+
+	/**
+	 * @return string
+	 * @throws Exception
+	 */
+	public static function Cfg()
+	{
+		if ( is_array( self::$config ) && count( self::$config ) == 2 ) {
+			$args = func_get_args();
+			return call_user_func_array( self::$config, $args );
+		}
+		else {
+			throw new Exception( 'Config has not been set' );
+		}
+	}
+	/**
+	 * @param array $config
+	 */
+	public static function setConfig( array $config )
+	{
+		self::$config = $config;
 	}
 }

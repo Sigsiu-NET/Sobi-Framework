@@ -28,6 +28,10 @@ defined( 'SOBI' ) || exit( 'Restricted access' );
 /**
  * @method      integer  Sid()       public static Sid( $request = 'request', $default = 0 )
  * @method      integer  Cid()       public static Cid( $request = 'request', $default = 0 )
+ * @method      integer  Pid()       public static Cid( $request = 'request', $default = 0 )
+ * @method      integer  Rid()       public static Rid( $request = 'request', $default = 0 )
+ * @method      integer  Eid()       public static Eid( $request = 'request', $default = 0 )
+ * @method      integer  Fid()       public static Fid( $request = 'request', $default = 0 )
  */
 abstract class Input
 {
@@ -188,7 +192,7 @@ abstract class Input
 	 *
 	 * @since version
 	 */
-	public static function Ip4( $name, $request = 'server', $default = null )
+	public static function Ip4( $name = 'REMOTE_ADDR', $request = 'server', $default = null )
 	{
 		return preg_replace( '/[^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}]/', null, Request::Instance()->{$request}->getString( $name, $default ) );
 	}
@@ -261,7 +265,7 @@ abstract class Input
 	 */
 	static public function Timestamp( $name, $method = 'request', $default = 0.0 )
 	{
-		$val = self::Double( $name, $default, $method );
+		$val = self::Double( $name, $method, $default );
 		// JavaScript conversion
 		return $val > 10000000000 ? $val / 1000 : $val;
 	}

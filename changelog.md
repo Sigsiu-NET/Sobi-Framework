@@ -27,6 +27,11 @@ Legend:
 - (!) - Change
 
 
+1.0.3 ()
+-------------------
+
+	(#) Wrong casll in Input::Timestamp
+
 1.0.2 (4 March 2017)
 -------------------
 
