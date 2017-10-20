@@ -219,7 +219,19 @@ abstract class Input
 	 */
 	public static function Raw( $name, $request = 'request', $default = null )
 	{
-		return Request::Instance()->{$request}->get( $name, $default );
+		$r = null;
+		switch ( $request ) {
+			case 'post':
+				$r = filter_var( $_POST[ $name ], FILTER_SANITIZE_MAGIC_QUOTES );
+				break;
+			case 'get':
+				$r = filter_var( $_GET[ $name ], FILTER_SANITIZE_MAGIC_QUOTES );
+				break;
+			default:
+				$r = filter_var( $_REQUEST[ $name ], FILTER_SANITIZE_MAGIC_QUOTES );
+				break;
+		}
+		return $r ? $r : $default;
 	}
 
 	/**
@@ -252,7 +264,6 @@ abstract class Input
 		else {
 			throw new Exception( "Call to undefined method {$name} of class " . __CLASS__ );
 		}
-		return false;
 	}
 
 	/**

@@ -192,10 +192,10 @@ class MySQLi
 	/**
 	 * Creates a "select" SQL query.
 	 *
-	 * @param string $toSelect - table rows to select
+	 * @param string | array $toSelect - table rows to select
 	 * @param string $tables - from which table(s)
 	 * @param string $where - SQL select condition
-	 * @param null $order
+	 * @param string $order
 	 * @param int $limit - maximal number of rows
 	 * @param int $limitStart - start position
 	 * @param bool $distinct - clear??
@@ -263,7 +263,7 @@ class MySQLi
 	 * Creates a "delete" SQL query
 	 *
 	 * @param string $table - in which table
-	 * @param string $where - SQL delete condition
+	 * @param string | array $where - SQL delete condition
 	 * @param int $limit - maximal number of rows to delete
 	 * @throws Exception
 	 * @return \Sobi\Database\MySQLi
@@ -564,7 +564,7 @@ class MySQLi
 	 *
 	 * @param string $table - table to update
 	 * @param array $set - two-dimensional array with table row name to update => new value
-	 * @param string $where - SQL update condition
+	 * @param string | array $where - SQL update condition
 	 * @param int $limit
 	 */
 	public function update( $table, $set, $where, $limit = 0 )

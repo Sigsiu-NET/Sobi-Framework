@@ -31,6 +31,8 @@ Legend:
 -------------------
 
 	(#) Wrong casll in Input::Timestamp
+	
+	(!) Switchng Input::Raw back to vanilla PHP
 
 1.0.2 (4 March 2017)
 -------------------
