@@ -318,7 +318,7 @@ class Header
 	/**
 	 * Add CSS file to the site header
 	 *
-	 * @param string $file file name
+	 * @param string | array $file file name
 	 * @param bool $adm
 	 * @param null $media
 	 * @param bool $force

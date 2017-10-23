@@ -33,6 +33,7 @@ Legend:
 	(#) Wrong casll in Input::Timestamp
 	
 	(!) Switchng Input::Raw back to vanilla PHP
+	(!) Autoloader inclusion changed from relative to absolute path. Seems doesn't work on some servers. 
 
 1.0.2 (4 March 2017)
 -------------------
