@@ -30,7 +30,9 @@ Legend:
 1.0.3 ()
 -------------------
 
-	(#) Wrong casll in Input::Timestamp
+	(#) Wrong calls in Input::Timestamp
+	(#) Or-operation of where conditions with time as parameter failed
+	
 
 1.0.2 (4 March 2017)
 -------------------
