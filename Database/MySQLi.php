@@ -48,7 +48,6 @@ class MySQLi
 	public function __construct()
 	{
 		$this->db = \JFactory::getDBO();
-
 		return $this;
 	}
 
@@ -61,7 +60,6 @@ class MySQLi
 		if ( !$db || !( $db instanceof self ) ) {
 			$db = new self();
 		}
-
 		return $db;
 	}
 
@@ -90,7 +88,6 @@ class MySQLi
 	 *
 	 * @param string $method
 	 * @param array $args
-	 *
 	 * @throws Exception
 	 * @return mixed
 	 */
@@ -102,7 +99,6 @@ class MySQLi
 			foreach ( $args as $k => &$arg ) {
 				$Args[ $k ] = &$arg;
 			}
-
 			return call_user_func_array( [ $this->db, $method ], $Args );
 		}
 		else {
@@ -115,7 +111,6 @@ class MySQLi
 	 *
 	 * @param string $text string to be escaped
 	 * @param bool $esc extra escaping
-	 *
 	 * @return string
 	 */
 	public function getEscaped( $text, $esc = false )
@@ -128,7 +123,6 @@ class MySQLi
 	 *
 	 * @param string $text string to be escaped
 	 * @param bool $esc extra escaping
-	 *
 	 * @return string
 	 */
 	public function escape( $text, $esc = false )
@@ -150,7 +144,6 @@ class MySQLi
 	 * Sets the SQL query string for later execution.
 	 *
 	 * @param string $sql
-	 *
 	 * @return MySQLi
 	 */
 	public function & setQuery( $sql )
@@ -158,7 +151,6 @@ class MySQLi
 		$sql = str_replace( 'spdb', $this->prefix . 'sobipro', $sql );
 		$sql = str_replace( 'NOW()', '\'' . gmdate( 'Y-m-d H:i:s' ) . '\'', $sql );
 		$this->db->setQuery( $sql );
-
 		return $this;
 	}
 
@@ -178,7 +170,6 @@ class MySQLi
 				}
 			}
 		}
-
 		return $log;
 	}
 
@@ -192,7 +183,6 @@ class MySQLi
 	 * @param int $limit
 	 * @param int $limitStart
 	 * @param null $group
-	 *
 	 * @return \Sobi\Database\MySQLi
 	 * param string $groupBy - column to group by
 	 */
@@ -204,15 +194,14 @@ class MySQLi
 	/**
 	 * Creates a "select" SQL query.
 	 *
-	 * @param string | array $toSelect - table rows to select
+	 * @param string $toSelect - table rows to select
 	 * @param string $tables - from which table(s)
 	 * @param string $where - SQL select condition
-	 * @param string $order
+	 * @param null $order
 	 * @param int $limit - maximal number of rows
 	 * @param int $limitStart - start position
 	 * @param bool $distinct - clear??
 	 * @param string $groupBy - column to group by
-	 *
 	 * @return \Sobi\Database\MySQLi
 	 */
 	public function & select( $toSelect, $tables, $where = null, $order = null, $limit = 0, $limitStart = 0, $distinct = false, $groupBy = null )
@@ -269,7 +258,6 @@ class MySQLi
 			$ordering = "ORDER BY {$order}";
 		}
 		$this->setQuery( "SELECT {$distinct}{$toSelect} FROM {$tables} {$where} {$groupBy} {$ordering} {$limits}" );
-
 		return $this;
 	}
 
@@ -277,9 +265,8 @@ class MySQLi
 	 * Creates a "delete" SQL query
 	 *
 	 * @param string $table - in which table
-	 * @param string | array $where - SQL delete condition
+	 * @param string $where - SQL delete condition
 	 * @param int $limit - maximal number of rows to delete
-	 *
 	 * @throws Exception
 	 * @return \Sobi\Database\MySQLi
 	 */
@@ -289,11 +276,9 @@ class MySQLi
 		$limit = $limit ? "LIMIT $limit" : null;
 		try {
 			$this->exec( "DELETE FROM {$table} WHERE {$where} {$limit}" );
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-
 		return $this;
 	}
 
@@ -302,7 +287,6 @@ class MySQLi
 	 *
 	 * @param string $table - in which table
 	 * @param bool|string $ifExists
-	 *
 	 * @throws Exception
 	 * @return \Sobi\Database\MySQLi
 	 */
@@ -311,11 +295,9 @@ class MySQLi
 		$ifExists = $ifExists ? 'IF EXISTS' : null;
 		try {
 			$this->exec( "DROP TABLE {$ifExists} {$table}" );
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-
 		return $this;
 	}
 
@@ -323,7 +305,6 @@ class MySQLi
 	 * Creates a "truncate table" SQL query
 	 *
 	 * @param string $table - in which table
-	 *
 	 * @throws Exception
 	 * @return \Sobi\Database\MySQLi
 	 */
@@ -331,11 +312,9 @@ class MySQLi
 	{
 		try {
 			$this->exec( "TRUNCATE TABLE {$table}" );
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-
 		return $this;
 	}
 
@@ -344,7 +323,6 @@ class MySQLi
 	 *
 	 * @param array $where - array with values. array( 'id' => 5, 'published' => 1 ) OR array( 'id' => array( 5, 3, 4 ), 'published' => 1 )
 	 * @param string $andor - join conditions through AND or OR
-	 *
 	 * @return string
 	 */
 	public function where( $where, $andor = 'AND' )
@@ -368,7 +346,7 @@ class MySQLi
 					$not = true;
 				}
 				/* current means get previous query */
-				if ( is_string( $val ) && ( string ) $val == '@CURRENT' ) {
+				if ( is_string( $val ) && ( string )$val == '@CURRENT' ) {
 					$n = $not ? 'NOT' : null;
 					$val = $this->db->getQuery();
 					$w[] = " ( {$col} {$n} IN ( {$val} ) ) ";
@@ -376,7 +354,7 @@ class MySQLi
 				/* see SPDb#valid() */
 				elseif ( $col == '@VALID' ) {
 //					$col = '';
- 					$w[] = $val;
+					$w[] = $val;
 				}
 				elseif ( is_numeric( $col ) ) {
 					$w[] = $this->escape( $val );
@@ -471,7 +449,6 @@ class MySQLi
 			}
 			$where = implode( " {$andor} ", $w );
 		}
-
 		return $where;
 	}
 
@@ -506,7 +483,6 @@ class MySQLi
 	 * @param bool $notExists - adds "CREATE TABLE IF NOT EXISTS"
 	 * @param string $engine - optional engine type
 	 * @param string $charset
-	 *
 	 * @return \Sobi\Database\MySQLi
 	 */
 	public function & createTable( $name, $fields, $keys = [], $notExists = false, $engine = null, $charset = 'utf8' )
@@ -558,7 +534,6 @@ class MySQLi
 		}
 		$query .= "DEFAULT CHARSET = {$charset};";
 		$this->exec( $query );
-
 		return $this;
 	}
 
@@ -584,8 +559,8 @@ class MySQLi
 				$cond[] .= $k;
 			}
 			else {
-				$cond[] .= $i . $equal . $k;
-			}
+			$cond[] .= $i . $equal . $k;
+		}
 		}
 		$cond = implode( ' OR ', $cond );
 
@@ -597,7 +572,7 @@ class MySQLi
 	 *
 	 * @param string $table - table to update
 	 * @param array $set - two-dimensional array with table row name to update => new value
-	 * @param string | array $where - SQL update condition
+	 * @param string $where - SQL update condition
 	 * @param int $limit
 	 */
 	public function update( $table, $set, $where, $limit = 0 )
@@ -631,7 +606,6 @@ class MySQLi
 	 *
 	 * @param string $table - table name
 	 * @param array $values - two-dimensional array with table row name => value
-	 *
 	 * @throws Exception
 	 */
 	public function replace( $table, $values )
@@ -652,8 +626,7 @@ class MySQLi
 		$v = implode( ',', $v );
 		try {
 			$this->exec( "REPLACE INTO {$table} VALUES ({$v})" );
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
 	}
@@ -665,7 +638,6 @@ class MySQLi
 	 * @param array $values - two-dimensional array with table row name => value
 	 * @param bool $ignore - adds "IGNORE" after "INSERT" command
 	 * @param bool $normalize - if the $values is a two-dimensional, array and it's not complete - fit to the columns
-	 *
 	 * @throws Exception
 	 * @return \Sobi\Database\MySQLi
 	 */
@@ -691,17 +663,14 @@ class MySQLi
 		$v = implode( ',', $v );
 		try {
 			$this->exec( "INSERT {$ignore} INTO {$table} VALUES ({$v})" );
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-
 		return $this;
 	}
 
 	/**
 	 * Fits a two dimensional array to the necessary columns of the given table
-	 *
 	 * @param string $table - table name
 	 * @param array $values
 	 */
@@ -723,7 +692,6 @@ class MySQLi
 	 * @param array $values - one-dimensional array with two-dimensional array with table row name => value
 	 * @param bool $update - update existing row if cannot insert it because of duplicate primary key
 	 * @param bool $ignore - adds "IGNORE" after "INSERT" command
-	 *
 	 * @throws Exception
 	 * @return \Sobi\Database\MySQLi
 	 */
@@ -757,11 +725,9 @@ class MySQLi
 		$update = $update ? "ON DUPLICATE KEY UPDATE {$vars}" : null;
 		try {
 			$this->exec( "INSERT {$ignore} INTO {$table} ( `{$k}` ) VALUES ({$rows}) {$update}" );
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-
 		return $this;
 	}
 
@@ -770,7 +736,6 @@ class MySQLi
 	 *
 	 * @param string $table - table name
 	 * @param array $values - two-dimensional array with table row name => value
-	 *
 	 * @throws Exception
 	 * @return \Sobi\Database\MySQLi
 	 */
@@ -801,11 +766,9 @@ class MySQLi
 		$k = implode( ',', $k );
 		try {
 			$this->exec( "INSERT INTO {$table} ({$k}) VALUES ({$v}) ON DUPLICATE KEY UPDATE {$c}" );
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-
 		return $this;
 	}
 
@@ -837,7 +800,6 @@ class MySQLi
 	public function query()
 	{
 		$this->count++;
-
 		return $this->db->execute();
 	}
 
@@ -852,11 +814,9 @@ class MySQLi
 		try {
 			$r = $this->db->loadResult();
 			$this->count++;
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-
 		return $r;
 	}
 
@@ -871,11 +831,9 @@ class MySQLi
 		try {
 			$r = $this->db->loadColumn();
 			$this->count++;
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-
 		return $r;
 	}
 
@@ -883,7 +841,6 @@ class MySQLi
 	 * Load a assoc list of database rows
 	 *
 	 * @param string $key field name of a primary key
-	 *
 	 * @throws Exception
 	 * @return array If <var>key</var> is empty as sequential list of returned records.
 	 */
@@ -892,11 +849,9 @@ class MySQLi
 		try {
 			$r = $this->db->loadAssocList( $key );
 			$this->count++;
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-
 		return $r;
 	}
 
@@ -911,8 +866,7 @@ class MySQLi
 		try {
 			$r = $this->db->loadObject();
 			$this->count++;
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
 		if ( $r && is_object( $r ) ) {
@@ -923,7 +877,6 @@ class MySQLi
 				}
 			}
 		}
-
 		return $r;
 	}
 
@@ -931,7 +884,6 @@ class MySQLi
 	 * Load a list of database objects
 	 *
 	 * @param string $key
-	 *
 	 * @throws Exception
 	 * @return array If <var>key</var> is empty as sequential list of returned records.
 	 */
@@ -940,11 +892,9 @@ class MySQLi
 		try {
 			$r = $this->db->loadObjectList( $key );
 			$this->count++;
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-
 		return $r;
 	}
 
@@ -959,11 +909,9 @@ class MySQLi
 		try {
 			$r = $this->db->loadRow();
 			$this->count++;
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-
 		return $r;
 	}
 
@@ -971,7 +919,6 @@ class MySQLi
 	 * Load a list of database rows (numeric column indexing)
 	 *
 	 * @param string $key field name of a primary key
-	 *
 	 * @throws Exception
 	 * @return array If <var>key</var> is empty as sequential list of returned records.
 	 */
@@ -980,11 +927,9 @@ class MySQLi
 		try {
 			$r = $this->db->loadRowList( $key );
 			$this->count++;
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-
 		return $r;
 	}
 
@@ -1012,7 +957,6 @@ class MySQLi
 	 * executing query (update/insert etc)
 	 *
 	 * @param string $query - query to execute
-	 *
 	 * @throws Exception
 	 * @return mixed
 	 */
@@ -1021,19 +965,15 @@ class MySQLi
 		$this->setQuery( $query );
 		try {
 			$r = $this->query();
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			throw new Exception( $e->getMessage() );
 		}
-
 		return $r;
 	}
 
 	/**
 	 * Returns all rows of given table
-	 *
 	 * @param string $table
-	 *
 	 * @throws Exception
 	 * @return array
 	 */
@@ -1044,12 +984,10 @@ class MySQLi
 			$this->setQuery( "SHOW COLUMNS FROM {$table}" );
 			try {
 				$cache[ $table ] = $this->loadResultArray();
-			}
-			catch ( \Exception $e ) {
+			} catch ( \Exception $e ) {
 				throw new Exception( $e->getMessage() );
 			}
 		}
-
 		return $cache[ $table ];
 	}
 
@@ -1097,7 +1035,6 @@ class MySQLi
 	 *
 	 * @param array $params - two cells array with table name <var>table</var>, alias name <var>as</var> and common key <var>key</var>
 	 * @param string $through - join direction (left/right)
-	 *
 	 * @return string
 	 */
 	public function join( $params, $through = 'left' )
@@ -1128,24 +1065,21 @@ class MySQLi
 		}
 		else {
 			if (
-				( isset( $params[ 0 ][ 'table' ] ) && isset( $params[ 0 ][ 'as' ] ) && isset( $params[ 0 ][ 'key' ] ) )
-				&& ( isset( $params[ 1 ][ 'table' ] ) && isset( $params[ 1 ][ 'as' ] ) && isset( $params[ 1 ][ 'key' ] ) )
+					( isset( $params[ 0 ][ 'table' ] ) && isset( $params[ 0 ][ 'as' ] ) && isset( $params[ 0 ][ 'key' ] ) ) &&
+					( isset( $params[ 1 ][ 'table' ] ) && isset( $params[ 1 ][ 'as' ] ) && isset( $params[ 1 ][ 'key' ] ) )
 			) {
 				$join = " {$params[0]['table']} AS {$params[0]['as']} {$through} JOIN {$params[1]['table']} AS {$params[1]['as']} ON {$params[0]['as']}.{$params[0]['key']} =  {$params[1]['as']}.{$params[1]['key']}";
 			}
 		}
-
 		return $join;
 	}
 
 	/**
 	 * Creates syntax to check the expiration date, state, and start publishing date off an row
-	 *
 	 * @param string $until - row name where the expiration date is stored
 	 * @param string $since - row name where the start date is stored
 	 * @param string $pub - row name where the state is stored (e.g. 'published')
 	 * @param array $exception
-	 *
 	 * @return string
 	 */
 	public function valid( $until, $since = null, $pub = null, $exception = null )
@@ -1165,7 +1099,6 @@ class MySQLi
 			$exception = implode( 'OR', $ex );
 			$exception = 'OR ' . $exception;
 		}
-
 		//		return " ( ( {$until} > '{$now}' OR {$until} IN ( '{$null}', '{$stamp}' ) ) {$since} {$pub} ) ";
 		return "( ( {$until} > NOW() OR {$until} IN ( '{$null}', '{$stamp}' ) ) {$since} {$pub} ) {$exception} ";
 	}
