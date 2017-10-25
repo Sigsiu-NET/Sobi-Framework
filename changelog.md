@@ -30,6 +30,9 @@ Legend:
 1.0.3 ()
 -------------------
 
+	(!) Switching Input::Raw back to vanilla PHP
+	(!) Autoloader inclusion changed from relative to absolute path. Seems doesn't work on some servers. 
+
 	(#) Wrong calls in Input::Timestamp
 	(#) Or-operation of where conditions with time as parameter failed
 	

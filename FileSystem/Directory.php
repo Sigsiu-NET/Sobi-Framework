@@ -29,7 +29,7 @@ class Directory extends File
 	private $_dirIterator = null;
 
 	/**
-	 * @param string $string - part or full name of the file to search for
+	 * @param string | array $string - part or full name of the file to search for
 	 * @param bool $exact - search for exact string or the file nam can contain this string
 	 * @param $recLevel - recursion level
 	 * @return array

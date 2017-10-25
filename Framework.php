@@ -25,9 +25,9 @@ use Sobi\Error\Exception;
 
 abstract class Framework
 {
-	/** @var array  */
+	/** @var array */
 	protected static $translator = [];
-	/** @var array  */
+	/** @var array */
 	protected static $config;
 
 
@@ -45,7 +45,7 @@ abstract class Framework
 	public static function Init()
 	{
 		define( 'SOBI', true );
-		include_once 'Autoloader/Autoloader.php';
+		include_once dirname( __FILE__ ) . '/Autoloader/Autoloader.php';
 		Autoloader::getInstance()->register();
 	}
 
@@ -78,6 +78,7 @@ abstract class Framework
 			throw new Exception( 'Config has not been set' );
 		}
 	}
+
 	/**
 	 * @param array $config
 	 */

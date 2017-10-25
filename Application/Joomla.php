@@ -19,6 +19,7 @@
 namespace Sobi\Application;
 
 
+use Sobi\FileSystem\FileSystem;
 use Sobi\Framework;
 use Sobi\Input\Input;
 use Sobi\Lib\Instance;
@@ -159,7 +160,7 @@ class Joomla
 						break;
 				}
 			}
-			$jsUrl = Sobi::FixPath( Framework::Cfg( 'live_site' ) . ( defined( 'SOBI_ADM_FOLDER' ) ? SOBI_ADM_FOLDER . '/' : '' ) . self::Url( [ 'task' => 'txt.js', 'format' => 'json' ], true, false ) );
+			$jsUrl = FileSystem::FixPath( Framework::Cfg( 'live_site' ) . ( defined( 'SOBI_ADM_FOLDER' ) ? SOBI_ADM_FOLDER . '/' : '' ) . self::Url( [ 'task' => 'txt.js', 'format' => 'json' ], true, false ) );
 			$document->addCustomTag( "\n\t<script type=\"text/javascript\" src=\"" . str_replace( '&', '&amp;', $jsUrl ) . "\"></script>\n" );
 			$c++;
 			$document->addCustomTag( "\n\t<!--  SobiPro ({$c}) Head Tags Output -->\n" );
