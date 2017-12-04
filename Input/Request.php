@@ -25,4 +25,9 @@ defined( 'SOBI' ) || exit( 'Restricted access' );
 class Request extends \JInput
 {
 	use Instance;
+
+	public function setRequest( $name, $request )
+	{
+		$this->$name = $request;
+	}
 }

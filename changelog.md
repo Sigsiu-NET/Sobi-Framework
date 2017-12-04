@@ -30,6 +30,8 @@ Legend:
 1.0.3 ()
 -------------------
 
+    (+) Input::Search implemented 
+    
 	(!) Switching Input::Raw back to vanilla PHP
 	(!) Autoloader inclusion changed from relative to absolute path. Seems doesn't work on some servers. 
 

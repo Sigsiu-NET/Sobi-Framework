@@ -77,15 +77,43 @@ abstract class Input
 	 */
 	static public function Search( $search, $request = 'request' )
 	{
-//		$r = Request::Instance()->{$request};
-//		if ( count( self::$request ) ) {
-//			foreach ( self::$request as $name => $value ) {
-//				if ( strstr( $name, $search ) ) {
-//					self::$val[ $name ] = $value;
-//				}
-//			}
-//		}
-//		return self::$val;
+		$var = null;
+		switch ( $request ) {
+			case 'post':
+				$request = $_POST;
+				break;
+			case 'get':
+				$request = $_GET;
+				break;
+			default:
+				$request = $_REQUEST;
+				break;
+		}
+		if ( count( $request ) ) {
+			foreach ( $request as $name => $value ) {
+				if ( strstr( $name, $search ) ) {
+					switch ( gettype( $value ) ) {
+						case 'boolean':
+							$var = self::Bool( $name, $request );
+							break;
+						case 'integer':
+							$var = self::Int( $name, $request );
+							break;
+						case 'double':
+							$var = self::Double( $name, $request );
+							break;
+						case 'string':
+							$var = self::Html( $name, $request );
+							break;
+						case 'array':
+							$var = self::Arr( $name, $request );
+							break;
+					}
+					break;
+				}
+			}
+		}
+		return $var;
 	}
 
 	/**
@@ -307,5 +335,29 @@ abstract class Input
 	public static function Set( $name, $value, $request = 'request' )
 	{
 		Request::Instance()->{$request}->set( $name, $value );
+	}
+
+	/**
+	 * Transform data received via PUT/PATCH/etc to $_REQUEST
+	 * So ir can be filtered using Joomla's validation methods.
+	 * The method assumes that we are getting all those params as a JSON string
+	 */
+	public static function TransformToRequest()
+	{
+		$data = json_decode( file_get_contents( 'php://input' ), true );
+		if ( count( $data ) ) {
+			foreach ( $data as $index => $value ) {
+				self::Set( $index, $value );
+			}
+		}
+	}
+
+	/**
+	 * @param $name
+	 * @param $request
+	 */
+	public static function setRequest( $name, $request )
+	{
+		Request::Instance()->setRequest( $name, $request );
 	}
 }
