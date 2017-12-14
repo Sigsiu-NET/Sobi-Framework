@@ -78,12 +78,15 @@ abstract class Input
 	static public function Search( $search, $request = 'request' )
 	{
 		$var = null;
-		switch ( $request ) {
+		$input = 'request';
+		switch ( strtolower($request) ) {
 			case 'post':
+				$input = 'post';
 				$request = $_POST;
 				break;
 			case 'get':
 				$request = $_GET;
+				$input = 'get';
 				break;
 			default:
 				$request = $_REQUEST;
@@ -94,19 +97,19 @@ abstract class Input
 				if ( strstr( $name, $search ) ) {
 					switch ( gettype( $value ) ) {
 						case 'boolean':
-							$var = self::Bool( $name, $request );
+							$var = self::Bool( $name, $input );
 							break;
 						case 'integer':
-							$var = self::Int( $name, $request );
+							$var = self::Int( $name, $input );
 							break;
 						case 'double':
-							$var = self::Double( $name, $request );
+							$var = self::Double( $name, $input );
 							break;
 						case 'string':
-							$var = self::Html( $name, $request );
+							$var = self::Html( $name, $input );
 							break;
 						case 'array':
-							$var = self::Arr( $name, $request );
+							$var = self::Arr( $name, $input );
 							break;
 					}
 					break;
