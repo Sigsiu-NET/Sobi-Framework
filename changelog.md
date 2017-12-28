@@ -27,7 +27,7 @@ Legend:
 - (!) - Change
 
 
-1.0.3 ()
+1.0.3 (28 December 2017)
 -------------------
 
     (+) Input::Search implemented 
