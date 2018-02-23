@@ -65,7 +65,7 @@ abstract class Framework
 	}
 
 	/**
-	 * @return string
+	 * @return string | array
 	 * @throws Exception
 	 */
 	public static function Cfg()

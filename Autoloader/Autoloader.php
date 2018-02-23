@@ -111,6 +111,11 @@ class Autoloader
 				throw new Exception( "Can't find class {$class} definition" );
 			}
 		}
+		elseif ( isset( $path[ 1 ] ) && isset( $path[ 2 ] ) && file_exists( dirname( __DIR__ . '../' ) . '/ThirdParty/' . $path[ 1 ] . '/' . $path[ 2 ] . '.php' ) ) {
+			unset( $path[ 0 ] );
+			$path = implode( '/', $path );
+			include_once dirname( __DIR__ . '../' ) . '/ThirdParty/' . $path . '.php';
+		}
 		elseif ( isset( $this->classes[ $class ] ) ) {
 			/** @noinspection PhpIncludeInspection */
 			include_once $this->classes[ $class ];

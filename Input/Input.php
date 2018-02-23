@@ -21,7 +21,10 @@
 
 namespace Sobi\Input;
 
+use AthosHun\HTMLFilter\Configuration;
+use AthosHun\HTMLFilter\HTMLFilter;
 use Sobi\Error\Exception;
+use Sobi\Framework;
 
 defined( 'SOBI' ) || exit( 'Restricted access' );
 
@@ -79,7 +82,7 @@ abstract class Input
 	{
 		$var = null;
 		$input = 'request';
-		switch ( strtolower($request) ) {
+		switch ( strtolower( $request ) ) {
 			case 'post':
 				$input = 'post';
 				$request = $_POST;
@@ -196,7 +199,28 @@ abstract class Input
 	 */
 	public static function Html( $name, $request = 'request', $default = null )
 	{
-		return filter_var( Request::Instance()->{$request}->getHtml( $name, $default ), FILTER_SANITIZE_MAGIC_QUOTES );
+		static $config = null;
+		static $filter = null;
+		if ( !( $config ) ) {
+			$tags = Framework::Cfg( 'html.allowed_tags_array', [] );
+			$attributes = Framework::Cfg( 'html.allowed_attributes_array', [] );
+
+			$config = new Configuration();
+			$filter = new HTMLFilter();
+
+			if ( count( $tags ) ) {
+				foreach ( $tags as $tag ) {
+					$config->allowTag( $tag );
+					if ( count( $attributes ) ) {
+						foreach ( $attributes as $attribute ) {
+							$config->allowAttribute( $tag, $attribute );
+						}
+					}
+				}
+			}
+		}
+		$html = Request::Instance()->{$request}->getHtml( $name, $default );
+		return filter_var( $filter->filter( $config, $html ), FILTER_SANITIZE_MAGIC_QUOTES );
 	}
 
 	/**

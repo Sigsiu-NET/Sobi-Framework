@@ -193,9 +193,9 @@ class Image extends File
 	private function storeImage()
 	{
 		$st = preg_replace( '/[^0-9]/', null, microtime( true ) * 10000 );
-		$this->temp = SPLoader::path( 'tmp.img.' . $st, 'front', false, 'var', false );
-		if ( !( SPLoader::dirPath( 'tmp.img', 'front', true ) ) ) {
-			SPFs::mkdir( SPLoader::dirPath( 'tmp.img', 'front', false ) );
+		$this->temp = \SPLoader::path( 'tmp.img.' . $st, 'front', false, 'var', false );
+		if ( !( \SPLoader::dirPath( 'tmp.img', 'front', true ) ) ) {
+			\SPFs::mkdir( \SPLoader::dirPath( 'tmp.img', 'front', false ) );
 		}
 		switch ( $this->type ) {
 			case IMAGETYPE_GIF:
@@ -203,11 +203,11 @@ class Image extends File
 				break;
 			case IMAGETYPE_JPEG:
 			case IMAGETYPE_JPEG2000:
-				imagejpeg( $this->image, $this->temp, Sobi::Cfg( 'image.jpeg_quality', 100 ) );
+				imagejpeg( $this->image, $this->temp, \Sobi::Cfg( 'image.jpeg_quality', 100 ) );
 				break;
 			case IMAGETYPE_PNG:
 				imagealphablending( $this->image, true );
-				imagepng( $this->image, $this->temp, Sobi::Cfg( 'image.png_compression', 9 ) );
+				imagepng( $this->image, $this->temp, \Sobi::Cfg( 'image.png_compression', 9 ) );
 				break;
 		}
 		$this->_content = file_get_contents( $this->temp );
@@ -272,7 +272,7 @@ class Image extends File
 			$currentImg = $function( $this->_filename );
 		}
 		if ( !isset( self::$imgFunctions[ $imgType ] ) || !isset( $currentImg ) ) {
-			throw new SPException( SPLang::e( 'CREATE_IMAGE_MISSING_HANDLER', $this->_filename, $imgType ) );
+			throw new Exception( \SPLang::e( 'CREATE_IMAGE_MISSING_HANDLER', $this->_filename, $imgType ) );
 		}
 		return $currentImg;
 	}

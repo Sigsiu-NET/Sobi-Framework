@@ -46,7 +46,7 @@ abstract class StringUtils
 	public static function Nid( $txt, $unicode = false, $forceUnicode = false )
 	{
 		$txt = trim( str_replace( [ '.', '_' ], '-', $txt ) );
-		return ( Framework::Cfg( 'sef.unicode' ) && $unicode ) || $forceUnicode ? self::urlSafe( $txt ) : trim( preg_replace( '/(\s|[^A-Za-z0-9\-])+/', '-', \JFactory::getLanguage()->transliterate( $txt ) ), '_-\[\]\(\)' );
+		return ( Framework::Cfg( 'sef.unicode' ) && $unicode ) || $forceUnicode ? self::UrlSafe( $txt ) : trim( preg_replace( '/(\s|[^A-Za-z0-9\-])+/', '-', \JFactory::getLanguage()->transliterate( $txt ) ), '_-\[\]\(\)' );
 	}
 
 	/**
