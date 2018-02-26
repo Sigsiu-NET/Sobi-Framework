@@ -222,7 +222,7 @@ abstract class Input
 			}
 		}
 		$html = Request::Instance()->{$request}->getHtml( $name, $default );
-		return filter_var( $filter->filter( $config, $html ), FILTER_SANITIZE_MAGIC_QUOTES );
+		return $filter->filter( $config, $html );
 	}
 
 	/**
