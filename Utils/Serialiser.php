@@ -29,7 +29,7 @@ class Serialiser
 	 * @throws Exception
 	 * @return mixed
 	 */
-	public static function unserialise( $var, $name = null )
+	public static function Unserialise( $var, $name = null )
 	{
 		$r = null;
 		if ( is_string( $var ) && strlen( $var ) > 2 ) {
@@ -65,7 +65,7 @@ class Serialiser
 	 * @param mixed $var
 	 * @return string
 	 */
-	public static function serialise( $var )
+	public static function Serialise( $var )
 	{
 		if ( !( is_string( $var ) ) && ( is_array( $var ) && count( $var ) ) || is_object( $var ) ) {
 			$var = serialize( $var );
@@ -77,5 +77,62 @@ class Serialiser
 			$var = base64_encode( $var );
 		}
 		return is_string( $var ) ? $var : null;
+	}
+
+
+	/**
+	 * @param $data
+	 * @param bool $force
+	 * @return array|mixed
+	 */
+	public static function StructuralData( $data, $force = false )
+	{
+		if ( is_string( $data ) && strstr( $data, '://' ) ) {
+			$struct = explode( '://', $data );
+			switch ( $struct[ 0 ] ) {
+				case 'json':
+					if ( strstr( $struct[ 1 ], "':" ) || strstr( $struct[ 1 ], "{'" ) || strstr( $struct[ 1 ], "['" ) ) {
+						$struct[ 1 ] = str_replace( "'", '"', $struct[ 1 ] );
+					}
+					$data = json_decode( $struct[ 1 ] );
+					break;
+				case 'serialized':
+					if ( strstr( $struct[ 1 ], "':" ) || strstr( $struct[ 1 ], ":'" ) || strstr( $struct[ 1 ], "['" ) ) {
+						$struct[ 1 ] = str_replace( "'", '"', $struct[ 1 ] );
+					}
+					$data = unserialize( $struct[ 1 ] );
+					break;
+				case 'csv':
+					if ( function_exists( 'str_getcsv' ) ) {
+						$data = str_getcsv( $struct[ 1 ] );
+					}
+					break;
+			}
+		}
+		elseif ( is_string( $data ) && $force ) {
+			if ( strstr( $data, '|' ) ) {
+				$data = explode( '|', $data );
+			}
+			elseif ( strstr( $data, ',' ) ) {
+				$data = explode( ',', $data );
+			}
+			elseif ( strstr( $data, ';' ) ) {
+				$data = explode( ';', $data );
+			}
+			else {
+				$data = [ $data ];
+			}
+		}
+		return $data;
+	}
+
+	public static function Unserialize( $var, $name = null )
+	{
+		return self::Unserialise( $var, $name );
+	}
+
+	public static function Serialize( $var )
+	{
+		return self::Serialise( $var );
 	}
 }

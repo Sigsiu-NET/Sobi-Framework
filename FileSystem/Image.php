@@ -33,17 +33,13 @@ class Image extends File
 	/*** @var \Grafika\ImageInterface */
 	protected $image = null;
 
-	public function __construct( $filename = null )
-	{
-		parent::__construct( $filename );
-		$this->createEditor();
-	}
 
 	/**
 	 * @param $transparency
 	 */
 	public function setTransparency( $transparency )
 	{
+		$this->createEditor();
 		$this->transparency = $transparency;
 		if ( method_exists( $this->image, 'fullAlphaMode' ) ) {
 			$this->image->fullAlphaMode( $transparency );
@@ -77,6 +73,7 @@ class Image extends File
 	 */
 	public function & crop( $width, $height )
 	{
+		$this->createEditor();
 		$this->editor->crop( $this->image, $width, $height );
 		return $this;
 	}
@@ -90,6 +87,7 @@ class Image extends File
 	 */
 	public function & resample( $width, $height )
 	{
+		$this->createEditor();
 		$this->editor->resizeExact( $this->image, $width, $height );
 		return $this;
 	}
@@ -102,6 +100,7 @@ class Image extends File
 
 	public function save()
 	{
+		$this->createEditor();
 		return $this->editor
 				->save( $this->image, $this->_filename, null, Framework::Cfg( 'image.jpeg_quality', 90 ) );
 	}
@@ -114,6 +113,7 @@ class Image extends File
 	 */
 	public function & rotate( $angle )
 	{
+		$this->createEditor();
 		$this->editor->rotate( $image, $angle );
 		return $this;
 	}
@@ -143,19 +143,11 @@ class Image extends File
 		return $return;
 	}
 
-
-	public function upload( $name, $destination )
-	{
-		$file = parent::upload( $name, $destination );
-		$this->createEditor();
-		return $file;
-	}
-
 	/**
 	 */
 	protected function createEditor()
 	{
-		if ( $this->_filename ) {
+		if ( $this->_filename && !( $this->editor ) ) {
 			$this->editor = Grafika::createEditor()
 					->open( $this->image, $this->_filename );
 		}

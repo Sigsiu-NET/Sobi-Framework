@@ -24,7 +24,9 @@ namespace Sobi\Input;
 use AthosHun\HTMLFilter\Configuration;
 use AthosHun\HTMLFilter\HTMLFilter;
 use Sobi\Error\Exception;
+use Sobi\FileSystem\FileSystem;
 use Sobi\Framework;
+use Sobi\Utils\Serialiser;
 
 defined( 'SOBI' ) || exit( 'Restricted access' );
 
@@ -380,11 +382,28 @@ abstract class Input
 	}
 
 	/**
-	 * @param $name
-	 * @param $request
+	 * @param string $name variable name
+	 * @param string $property
+	 * @param string $request request method
+	 * @return string
 	 */
-	public static function setRequest( $name, $request )
+	static public function File( $name, $property = null, $request = 'files' )
 	{
-		Request::Instance()->setRequest( $name, $request );
+		if ( $request == 'files' ) {
+			/** check for Ajax uploaded files */
+			$check = self::String( $name );
+			if ( $check ) {
+				$secret = md5( Framework::Cfg( 'secret' ) );
+				$fileName = str_replace( 'file://', null, $check );
+				$path = Framework::Cfg( 'temp-directory' ). "/files/{$secret}/{$fileName}";
+				if ( file_exists( "{$path}.var" ) ) {
+					$cfg = FileSystem::Read( "{$path}.var" );
+					$data = Serialiser::Unserialise( $cfg );
+					$_FILES[ $name ] = $data;
+				}
+			}
+		}
+		$data = Request::Instance()->files->get( $name );
+		return ( $property && isset( $data[ $property ] ) ) ? $data[ $property ] : $data;
 	}
 }
