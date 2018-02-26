@@ -32,6 +32,7 @@ Legend:
 
     (+) Input::Search implemented 
     (+) Implemented AthosHun\HTMLFilter
+    (+) Implemented Grafika 
     
 	(!) Switching Input::Raw back to vanilla PHP
 	(!) Autoloader inclusion changed from relative to absolute path. Seems doesn't work on some servers. 

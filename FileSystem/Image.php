@@ -18,28 +18,37 @@
 
 namespace Sobi\FileSystem;
 
+use Grafika\Grafika;
 use Sobi\Framework;
-use Sobi\FileSystem\FileSystem;
 use Sobi\Error\Exception;
 
 class Image extends File
 {
+	/*** @var array */
+	protected $exif = [];
+	/*** @var bool */
+	protected $transparency = true;
+	/*** @var \Grafika\EditorInterface */
+	protected $editor = null;
+	/*** @var \Grafika\ImageInterface */
+	protected $image = null;
 
-	/*** @var int */
-	private $type = 0;
-	/*** @var string */
-	private $temp = null;
-	/*** @var resource */
-	private $image = null;
-	/*** @var array */
-	private $exif = [];
-	/*** @var array */
-	static $imgFunctions = [
-			IMAGETYPE_GIF => 'imagecreatefromgif',
-			IMAGETYPE_JPEG => 'imagecreatefromjpeg',
-			IMAGETYPE_PNG => 'imagecreatefrompng',
-			IMAGETYPE_JPEG2000 => 'imagecreatefromjpeg'
-	];
+	public function __construct( $filename = null )
+	{
+		parent::__construct( $filename );
+		$this->createEditor();
+	}
+
+	/**
+	 * @param $transparency
+	 */
+	public function setTransparency( $transparency )
+	{
+		$this->transparency = $transparency;
+		if ( method_exists( $this->image, 'fullAlphaMode' ) ) {
+			$this->image->fullAlphaMode( $transparency );
+		}
+	}
 
 	/**
 	 * @param int $sections
@@ -64,100 +73,49 @@ class Image extends File
 	 * Resample image
 	 * @param $width
 	 * @param $height
-	 * @param $x
-	 * @param $y
-	 * @return bool
+	 * @return $this
 	 */
-	public function crop( $width, $height, $x = 0, $y = 0 )
+	public function & crop( $width, $height )
 	{
-		if ( !$this->_content ) {
-			$this->read();
-		}
-		list( $wOrg, $hOrg, $imgType ) = getimagesize( $this->_filename );
-		$this->type = $imgType;
-		$currentImg = $this->createImage( $imgType );
-		if ( function_exists( 'imagecrop' ) ) {
-			$this->image = imagecrop( $currentImg, [ 'x' => $x, 'y' => $y, 'width' => $width, 'height' => $height ] );
-		}
-		else {
-			// imagecopy ( resource $dst_im , resource $src_im , int $dst_x , int $dst_y , int $src_x , int $src_y , int $src_w , int $src_h )
-			$this->image = imagecreatetruecolor( $width, $height );
-			imagecopy( $this->image, $currentImg, 0, 0, $x, $y, $width, $height );
-		}
-		if ( $imgType == IMAGETYPE_GIF || $imgType == IMAGETYPE_PNG ) {
-			$this->transparency( $this->image );
-		}
-		$this->storeImage();
+		$this->editor->crop( $this->image, $width, $height );
+		return $this;
 	}
 
 	/**
 	 * Resample image
 	 * @param $width
 	 * @param $height
-	 * @param bool $always - even if smaller as given values
 	 * @throws Exception
-	 * @return bool
+	 * @return $this
 	 */
-	public function resample( $width, $height, $always = true )
+	public function & resample( $width, $height )
 	{
-		if ( !( $width && $height ) ) {
-			throw new Exception( Framework::Txt( 'INVALID_VALUES_FOR_RESAMPLE', $width, $height ) );
-		}
-		if ( !$this->_content ) {
-			$this->read();
-		}
-		list( $wOrg, $hOrg, $imgType ) = getimagesize( $this->_filename );
-
-		/* if not an image */
-		if ( !$wOrg || !$hOrg || !$imgType ) {
-			throw new Exception( Framework::Txt( 'CANNOT_GET_IMG_INFO', $this->_filename ) );
-		}
-
-		/* if not always and image is smaller */
-		if ( !$always && ( ( $wOrg <= $width ) && ( $hOrg <= $height ) ) ) {
-			return true;
-		}
-
-		$orgRatio = $wOrg / $hOrg;
-
-		if ( ( $width / $height ) > $orgRatio ) {
-			$width = $height * $orgRatio;
-		}
-		else {
-			$height = $width / $orgRatio;
-		}
-
-		/* create new image */
-		$this->image = imagecreatetruecolor( $width, $height );
-		$currentImg = $this->createImage( $imgType );
-
-		$this->type = $imgType;
-
-		/* save the transparency */
-		if ( $imgType == IMAGETYPE_GIF || $imgType == IMAGETYPE_PNG ) {
-			$this->transparency( $currentImg );
-		}
-
-		/* resample image */
-		imagecopyresampled( $this->image, $currentImg, 0, 0, 0, 0, $width, $height, $wOrg, $hOrg );
-		$this->storeImage();
+		$this->editor->resizeExact( $this->image, $width, $height );
+		return $this;
 	}
+
+	public function saveAs( $path )
+	{
+		return $this->editor
+				->save( $this->image, $path, null, Framework::Cfg( 'image.jpeg_quality', 90 ) );
+	}
+
+	public function save()
+	{
+		return $this->editor
+				->save( $this->image, $this->_filename, null, Framework::Cfg( 'image.jpeg_quality', 90 ) );
+	}
+
 
 	/**
 	 * Rotate image
 	 * @param $angle
-	 * @param $backgroundColor
-	 * @param bool $ignoreTransparent
-	 * @return bool
+	 * @return $this
 	 */
-	public function rotate( $angle, $backgroundColor, $ignoreTransparent = false )
+	public function & rotate( $angle )
 	{
-		if ( !( $this->type ) ) {
-			list( $wOrg, $hOrg, $this->type ) = getimagesize( $this->_filename );
-		}
-		$currentImg = $this->createImage( $this->type );
-		$this->image = imagerotate( $currentImg, $angle, $backgroundColor, $ignoreTransparent );
-		$this->storeImage();
+		$this->editor->rotate( $image, $angle );
+		return $this;
 	}
 
 	/**
@@ -170,110 +128,36 @@ class Image extends File
 			switch ( $this->exif[ 'IFD0' ][ 'Orientation' ] ) {
 				case 3:
 					$return = true;
-					$this->rotate( 180, 0 );
+					$this->rotate( 180 );
 					break;
 				case 6:
 					$return = true;
-					$this->rotate( -90, 0 );
+					$this->rotate( -90 );
 					break;
 				case 8:
 					$return = true;
-					$this->rotate( 90, 0 );
+					$this->rotate( 90 );
 					break;
 			}
 		}
 		return $return;
 	}
 
-	/**
-	 * Small work-around
-	 * The imageTYPE function is not very suitable for OO code
-	 * @return void
-	 */
-	private function storeImage()
+
+	public function upload( $name, $destination )
 	{
-		$st = preg_replace( '/[^0-9]/', null, microtime( true ) * 10000 );
-		$this->temp = \SPLoader::path( 'tmp.img.' . $st, 'front', false, 'var', false );
-		if ( !( \SPLoader::dirPath( 'tmp.img', 'front', true ) ) ) {
-			\SPFs::mkdir( \SPLoader::dirPath( 'tmp.img', 'front', false ) );
-		}
-		switch ( $this->type ) {
-			case IMAGETYPE_GIF:
-				imagegif( $this->image, $this->temp );
-				break;
-			case IMAGETYPE_JPEG:
-			case IMAGETYPE_JPEG2000:
-				imagejpeg( $this->image, $this->temp, \Sobi::Cfg( 'image.jpeg_quality', 100 ) );
-				break;
-			case IMAGETYPE_PNG:
-				imagealphablending( $this->image, true );
-				imagepng( $this->image, $this->temp, \Sobi::Cfg( 'image.png_compression', 9 ) );
-				break;
-		}
-		$this->_content = file_get_contents( $this->temp );
-		if ( $this->image ) {
-			imagedestroy( $this->image );
-		}
+		$file = parent::upload( $name, $destination );
+		$this->createEditor();
+		return $file;
 	}
 
 	/**
-	 * @author Radek Suski
-	 * @author Claudio F. images with transparent color are processed in the right way
-	 * resampling image to adjusted size
-	 * @param $img
-	 * @return void
 	 */
-	private function transparency( &$img )
+	protected function createEditor()
 	{
-		$index = imagecolortransparent( $img );
-		/* If we have a specific transparent color */
-		if ( $index >= 0 ) {
-			/* Get the original image's transparent color's RGB values */
-			$transparency = imagecolorsforindex( $img, $index );
-			/* Allocate the same color in the new image resource */
-			$index = imagecolorallocate( $this->image, $transparency[ 'red' ], $transparency[ 'green' ], $transparency[ 'blue' ] );
-			/* Completely fill the background of the new image with allocated color. */
-			imagefill( $this->image, 0, 0, $index );
-			/* Set the background color for new image to transparent */
-			imagecolortransparent( $this->image, $index );
+		if ( $this->_filename ) {
+			$this->editor = Grafika::createEditor()
+					->open( $this->image, $this->_filename );
 		}
-		/** Mon, Aug 3, 2015 09:32:49
-		 * It doesn't make much sense. If the uploaded PNG file is not transparent in original
-		 * why do we need to add the transparency?
-		 * Let's see if we screw something with that
-		 *
-		 * * Fri, Aug 26, 2016 10:03:04
-		 * Bringing it back because there is no real way to detect transparency in an image
-		 * We are going to use https://github.com/kosinix/grafika in next version probably
-		 */
-		/* Always make a transparent background color for PNGs that don't have one allocated already */
-		else {
-			/* Turn off transparency blending (temporarily) */
-			imagealphablending( $this->image, false );
-			/* Create a new transparent color for image */
-			$color = imagecolorallocatealpha( $this->image, 0, 0, 0, 127 );
-			/* Completely fill the background of the new image with allocated color. */
-			imagefill( $this->image, 0, 0, $color );
-			/* Restore transparency blending */
-			imagesavealpha( $this->image, true );
-		}
-	}
-
-	/**
-	 * @param $imgType
-	 * @return mixed
-	 * @throws SPException
-	 */
-	protected function createImage( $imgType )
-	{
-		/* create image object from the current file */
-		if ( isset( self::$imgFunctions[ $imgType ] ) ) {
-			$function = self::$imgFunctions[ $imgType ];
-			$currentImg = $function( $this->_filename );
-		}
-		if ( !isset( self::$imgFunctions[ $imgType ] ) || !isset( $currentImg ) ) {
-			throw new Exception( \SPLang::e( 'CREATE_IMAGE_MISSING_HANDLER', $this->_filename, $imgType ) );
-		}
-		return $currentImg;
 	}
 }

@@ -111,14 +111,29 @@ class Autoloader
 				throw new Exception( "Can't find class {$class} definition" );
 			}
 		}
+		// @todo probably not needed anymore because of the loop detection
 		elseif ( isset( $path[ 1 ] ) && isset( $path[ 2 ] ) && file_exists( dirname( __DIR__ . '../' ) . '/ThirdParty/' . $path[ 1 ] . '/' . $path[ 2 ] . '.php' ) ) {
 			unset( $path[ 0 ] );
 			$path = implode( '/', $path );
+			/** @noinspection PhpIncludeInspection */
 			include_once dirname( __DIR__ . '../' ) . '/ThirdParty/' . $path . '.php';
 		}
 		elseif ( isset( $this->classes[ $class ] ) ) {
 			/** @noinspection PhpIncludeInspection */
 			include_once $this->classes[ $class ];
 		}
+		elseif ( count( $path ) ) {
+			$include = dirname( __DIR__ . '../' ) . '/ThirdParty';
+			foreach ( $path as $file ) {
+				if ( file_exists( $include . '/' . $file ) ) {
+					$include = $include . '/' . $file;
+				}
+				elseif ( file_exists( $include . '/' . $file . '.php' ) ) {
+					/** @noinspection PhpIncludeInspection */
+					include_once $include . '/' . $file . '.php';
+				}
+			}
+		}
+
 	}
 }
