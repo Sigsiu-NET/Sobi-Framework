@@ -102,19 +102,19 @@ abstract class Input
 				if ( strstr( $name, $search ) ) {
 					switch ( gettype( $value ) ) {
 						case 'boolean':
-							$var = self::Bool( $name, $input );
+							$var[ $name ] = self::Bool( $name, $input );
 							break;
 						case 'integer':
-							$var = self::Int( $name, $input );
+							$var[ $name ] = self::Int( $name, $input );
 							break;
 						case 'double':
-							$var = self::Double( $name, $input );
+							$var[ $name ] = self::Double( $name, $input );
 							break;
 						case 'string':
-							$var = self::Html( $name, $input );
+							$var[ $name ] = self::Html( $name, $input );
 							break;
 						case 'array':
-							$var = self::Arr( $name, $input );
+							$var[ $name ] = self::Arr( $name, $input );
 							break;
 					}
 					break;
@@ -364,6 +364,15 @@ abstract class Input
 	public static function Set( $name, $value, $request = 'request' )
 	{
 		Request::Instance()->{$request}->set( $name, $value );
+		switch ( $request ) {
+			case 'post':
+				$_POST[ $name ] = $value;
+				break;
+			case 'get':
+				$_GET[ $name ] = $value;
+				break;
+		}
+		$_REQUEST[ $name ] = $value;
 	}
 
 	/**
@@ -395,7 +404,7 @@ abstract class Input
 			if ( $check ) {
 				$secret = md5( Framework::Cfg( 'secret' ) );
 				$fileName = str_replace( 'file://', null, $check );
-				$path = Framework::Cfg( 'temp-directory' ). "/files/{$secret}/{$fileName}";
+				$path = Framework::Cfg( 'temp-directory' ) . "/files/{$secret}/{$fileName}";
 				if ( file_exists( "{$path}.var" ) ) {
 					$cfg = FileSystem::Read( "{$path}.var" );
 					$data = Serialiser::Unserialise( $cfg );
